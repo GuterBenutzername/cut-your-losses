@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "postcss": {
     "plugins": {
@@ -23,6 +25,14 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
+    "@playwright/test": "^1.31.2",
+    "@storybook/addon-essentials": "7.0.0-beta.63",
+    "@storybook/addon-interactions": "7.0.0-beta.63",
+    "@storybook/addon-links": "7.0.0-beta.63",
+    "@storybook/blocks": "7.0.0-beta.63",
+    "@storybook/react": "7.0.0-beta.63",
+    "@storybook/react-vite": "7.0.0-beta.63",
+    "@storybook/testing-library": "0.0.14-next.1",
     "@testing-library/dom": ">=7.21.4",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
@@ -42,11 +52,14 @@
     "eslint-config-xo-typescript": "^0.56.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-storybook": "^0.6.11",
     "husky": "^8.0.3",
     "jsdom": "latest",
     "postcss": "^8.4.21",
     "postcss-preset-env": "8.0.1",
     "prettier": "2.8.4",
+    "prop-types": "15.8.1",
+    "storybook": "7.0.0-beta.63",
     "stylelint": "^14.0.0",
     "stylelint-config-xo": "^0.21.1",
     "typescript": ">=4.4",
