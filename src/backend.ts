@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 export function isAssignment(argument: unknown): argument is Assignment {
   return (
     argument !== null &&
@@ -6,10 +8,12 @@ export function isAssignment(argument: unknown): argument is Assignment {
     "weight" in argument &&
     "grade" in argument &&
     "theoretical" in argument &&
+    "id" in argument &&
     typeof argument.name === "string" &&
     typeof argument.weight === "number" &&
     typeof argument.grade === "number" &&
-    typeof argument.theoretical === "boolean"
+    typeof argument.theoretical === "boolean" &&
+    typeof argument.id === "string"
   );
 }
 
@@ -24,12 +28,14 @@ export function isAssignmentArray(argument: unknown): argument is Assignment[] {
 // Create a class to hold assignment data in a more efficient manner.
 export class Assignment {
   public theoretical;
+  public id: string;
   constructor(
     public name: string,
     public grade: number,
     public weight: number,
     theoretical?: boolean
   ) {
+    this.id = uuidv4();
     this.name = name;
     this.grade = grade;
     this.weight = weight;
@@ -37,8 +43,10 @@ export class Assignment {
   }
 }
 
-export class Class {
+export class Course {
+  public id: string;
   constructor(public name: string, public assignments: Assignment[]) {
+    this.id = uuidv4();
     this.name = name;
     this.assignments = assignments;
   }
@@ -72,6 +80,22 @@ function seperateArrayByWeights(array: Assignment[], weights: number[]) {
 
 // Get a weighted average of assignments with three different weight amounts
 export function weightedAverage(array: Assignment[], weights: number[]) {
+  if (weights.length === 0) {
+    return NaN;
+  }
+
+  if (!array.every((element) => element.grade >= 0)) {
+    return NaN;
+  }
+
+  if (weights.reduce((a, b) => a + b) > 1) {
+    return NaN;
+  }
+
+  if (weights.length === 3 && weights.reduce((a, b) => a + b) < 1) {
+    return NaN;
+  }
+
   // Seperate array to be averaged seperately.
   let [a, b, c] = seperateArrayByWeights(array, weights);
   // If all assignments have the same weight, return the average of the array.
