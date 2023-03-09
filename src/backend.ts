@@ -25,6 +25,26 @@ export function isAssignmentArray(argument: unknown): argument is Assignment[] {
   );
 }
 
+export function fakeAssignment(weights: number[]): Assignment {
+  return new Assignment(
+    uuidv4(),
+    Math.round(Math.random() * 10000) / 100,
+    weights[Math.floor(Math.random() * weights.length)]
+  );
+}
+
+export function fakeAssignmentArray(
+  weights: number[],
+  length: number
+): Assignment[] {
+  const array = [];
+  for (let index = 0; index < length; index++) {
+    array.push(fakeAssignment(weights));
+  }
+
+  return array;
+}
+
 // Create a class to hold assignment data in a more efficient manner.
 export class Assignment {
   public theoretical;
