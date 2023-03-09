@@ -8,8 +8,7 @@
         "xo",
         "xo-react",
         "xo-typescript",
-        "prettier",
-        "plugin:storybook/recommended"
+        "prettier"
     ],
     "parserOptions": {
         "ecmaVersion": "latest",
