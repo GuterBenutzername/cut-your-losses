@@ -1,0 +1,26 @@
+.assignment {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+  width: 50vw;
+  height: 2rem;
+  padding: 0;
+  border: solid 2px #000;
+  border-radius: 2px;
+}
+
+.assignment input {
+    width: 50%;
+}
+
+.assignment input[aria-label="weight"] {
+  border-right: 2px solid #000;
+}
+
+.assignment input[type="checkbox"] {
+  accent-color: red;
+  display: inline-block;
+  padding: 10px;
+  z-index: 2;
+}
