@@ -128,6 +128,6 @@ describe("weightedAverage returns correct averages", () => {
     expect(weightedAverage([new Assignment("test", NaN, 0.25)], [0.25, 0.15, 0.6])).toBeFalsy()
     expect(weightedAverage([new Assignment("test", 100, NaN)], [NaN])).toBeFalsy()
     expect(weightedAverage([new Assignment("test", -7, 0.25)], [0.25, 0.15, 0.6])).toBeFalsy()
-    expect(weightedAverage([new Assignment("test", 100, -1)], [-1]))
+    expect(weightedAverage([new Assignment("test", 100, -1)], [-1])).toBeFalsy()
   })
 });

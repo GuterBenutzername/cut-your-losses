@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { immerable } from "immer";
 
 export function isAssignment(argument: unknown): argument is Assignment {
   return (
@@ -27,7 +28,7 @@ export function isAssignmentArray(argument: unknown): argument is Assignment[] {
 
 export function fakeAssignment(weights: number[]): Assignment {
   return new Assignment(
-    uuidv4(),
+    (Math.random() + 1).toString(36).substring(7),
     Math.round(Math.random() * 10000) / 100,
     weights[Math.floor(Math.random() * weights.length)]
   );
@@ -45,8 +46,16 @@ export function fakeAssignmentArray(
   return array;
 }
 
+export function fakeCourse(assignmentsLength: number) {
+  return new Course(
+    (Math.random() + 1).toString(36).substring(7),
+    fakeAssignmentArray([0.6, 0.25, 0.15], assignmentsLength)
+  );
+}
+
 // Create a class to hold assignment data in a more efficient manner.
 export class Assignment {
+  [immerable] = true;
   public theoretical;
   public id: string;
   constructor(
@@ -64,6 +73,7 @@ export class Assignment {
 }
 
 export class Course {
+  [immerable] = true;
   public id: string;
   constructor(public name: string, public assignments: Assignment[]) {
     this.id = uuidv4();
@@ -113,6 +123,10 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
   }
 
   if (weights.length === 3 && weights.reduce((a, b) => a + b) < 1) {
+    return NaN;
+  }
+
+  if (!weights.every((element) => element >= 0)) {
     return NaN;
   }
 
