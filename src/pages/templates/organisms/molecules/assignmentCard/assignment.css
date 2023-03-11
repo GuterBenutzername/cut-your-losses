@@ -1,0 +1,53 @@
+.assignment {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+  width: 60vw;
+  height: 2rem;
+  padding: 0;
+  border: solid 2px #000;
+  border-radius: 2px;
+}
+
+.assignments button {
+  border-top: 0;
+  border-bottom: 0;
+}
+
+@media only screen and (max-width: 600px) {
+  .assignment {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+    width: 90vw;
+    height: 2rem;
+    padding: 0;
+    border: solid 2px #000;
+    border-radius: 2px;
+  }
+}
+
+.assignment input {
+  width: 50%;
+  border-top: 0;
+  border-bottom: 0;
+}
+
+.assignment input[aria-label="weight"] {
+  border-top: 0;
+  border-bottom: 0;
+  border-right: 2px solid #000;
+}
+
+.assignment input[type="checkbox"] {
+  accent-color: red;
+  display: inline-block;
+  width: 100%;
+}
+
+.theoretical-wrapper {
+  width: 50%;
+  text-align: center;
+}

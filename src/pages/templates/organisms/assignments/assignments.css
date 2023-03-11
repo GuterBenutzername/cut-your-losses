@@ -1,0 +1,34 @@
+.assignments {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.add-assignment {
+  border: 0 !important;
+  background-color: #ddd;
+  width: 60vw;
+}
+
+.add-assignment:hover {
+  background-color: #ccc;
+}
+
+.add-assignment:active {
+  background-color: #bbb;
+}
+
+@media only screen and (max-width: 600px) {
+  .add-assignment {
+    border: 0 !important;
+    background-color: #ddd;
+    width: 90vw;
+  }
+  
+  .add-assignment:hover {
+    background-color: #ccc;
+  }
+}
