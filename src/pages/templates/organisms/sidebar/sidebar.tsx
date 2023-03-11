@@ -34,7 +34,7 @@ export default function Sidebar({
         </button>
       ))}
       {creating ? (
-        <span className="course-button">
+        <span className="new-course-button">
           <label htmlFor="course-input">Course Name</label>
           <input
             autoFocus
@@ -46,6 +46,10 @@ export default function Sidebar({
             }}
             onKeyDown={(event) => {
               if (event.key === "Enter") {
+                if (courseNameText.trim() === "") {
+                  return;
+                }
+
                 onCreateCourse(courseNameText);
                 setCourseNameText("");
                 setCreating(false);
@@ -55,7 +59,7 @@ export default function Sidebar({
         </span>
       ) : (
         <button
-          className="course-button"
+          className="new-course-button"
           type="button"
           onClick={() => {
             setCreating(true);

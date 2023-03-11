@@ -81,4 +81,36 @@ describe("sidebar", () => {
     expect(onCreateCourse).toBeCalledTimes(1);
     expect(onCreateCourse).toHaveBeenCalledWith("TEST");
   });
+  it("handles edge cases", async () => {
+    const user = userEvent.setup();
+    const onCreateCourse = vi.fn();
+    const sidebarEdgeCaseTest = (
+      <Sidebar
+        currentCourse={-1}
+        courses={[new Course("A", []), new Course("B", [])]}
+        onSwapCourse={(_) => undefined}
+        onCreateCourse={onCreateCourse}
+      />
+    );
+    render(sidebarEdgeCaseTest);
+    await user.click(screen.getByRole("button", { name: /new course/i }));
+    await user.keyboard("{Enter}");
+    expect(onCreateCourse).toBeCalledTimes(0);
+    render(sidebarEdgeCaseTest);
+    await user.click(screen.getByRole("button", { name: /new course/i }));
+    await user.type(
+      screen.getByRole("textbox", { name: /course name/i }),
+      "    "
+    );
+    await user.keyboard("{Enter}");
+    expect(onCreateCourse).toBeCalledTimes(0);
+    render(sidebarEdgeCaseTest);
+    await user.click(screen.getByRole("button", { name: /new course/i }));
+    await user.type(
+      screen.getByRole("textbox", { name: /course name/i }),
+      " "
+    );
+    await user.keyboard("{Enter}");
+    expect(onCreateCourse).toBeCalledTimes(0);
+  });
 });
