@@ -1,4 +1,4 @@
-import { type Course } from "../../backend";
+import { type Course, Assignment } from '../../backend';
 import produce from "immer";
 import "./course.css"
 import Assignments from './organisms/assignments/assignments';
@@ -64,6 +64,13 @@ export default function CourseTemplate({
     onModifyCourse(nextCourseState, courseIndex);
   };
 
+  const onAddAssignment = () => {
+    const nextCourseState = produce(course, (draft) => {
+      draft.assignments.unshift(new Assignment("", 0, 0))
+    })
+    onModifyCourse(nextCourseState, courseIndex);
+  }
+
   return (
     <div>
       <ActionButtons
@@ -78,6 +85,7 @@ export default function CourseTemplate({
           assignments={course.assignments}
           onModifyAssignment={onModifyAssignment}
           onDeleteAssignment={onDeleteAssignment}
+          onAddAssignment={onAddAssignment}
         />
       </div>
     </div>

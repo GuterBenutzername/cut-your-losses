@@ -1,21 +1,31 @@
+import { type Ref, forwardRef, useImperativeHandle, useRef } from "react";
 import { type Assignment } from "../../../../../backend";
 import "./assignment.css";
 
-export default function AssignmentCard({
-  assignment,
-  index,
-  onModifyAssignment,
-  onDeleteAssignment,
-}: {
-  assignment: Assignment;
-  index: number;
-  onModifyAssignment: (
-    event: { target: { value: string } },
-    index: number,
-    property: "name" | "grade" | "weight" | "theoretical"
-  ) => void;
-  onDeleteAssignment: (index: number) => void;
-}) {
+function AssignmentCard(
+  {
+    assignment,
+    index,
+    onModifyAssignment,
+    onDeleteAssignment,
+  }: {
+    assignment: Assignment;
+    index: number;
+    onModifyAssignment: (
+      event: { target: { value: string } },
+      index: number,
+      property: "name" | "grade" | "weight" | "theoretical"
+    ) => void;
+    onDeleteAssignment: (index: number) => void;
+  },
+  ref: Ref<{focusFirst: () => void}> | undefined
+) {
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  useImperativeHandle(ref, () => ({
+    focusFirst() {
+      nameInputRef.current?.focus();
+    },
+  }));
   return (
     <div className="assignment">
       <button
@@ -28,6 +38,7 @@ export default function AssignmentCard({
         X
       </button>
       <input
+        ref={nameInputRef}
         aria-label="name"
         value={assignment.name}
         onChange={(event) => {
@@ -65,3 +76,5 @@ export default function AssignmentCard({
     </div>
   );
 }
+
+export default forwardRef(AssignmentCard);

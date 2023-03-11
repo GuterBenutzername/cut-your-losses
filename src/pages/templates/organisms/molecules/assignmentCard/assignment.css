@@ -10,6 +10,11 @@
   border-radius: 2px;
 }
 
+.assignments button {
+  border-top: 0;
+  border-bottom: 0;
+}
+
 @media only screen and (max-width: 600px) {
   .assignment {
     display: flex;
@@ -26,9 +31,13 @@
 
 .assignment input {
   width: 50%;
+  border-top: 0;
+  border-bottom: 0;
 }
 
 .assignment input[aria-label="weight"] {
+  border-top: 0;
+  border-bottom: 0;
   border-right: 2px solid #000;
 }
 
