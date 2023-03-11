@@ -36,7 +36,22 @@ export default function Sidebar({
       {creating ? (
         <span className="course-button">
           <label htmlFor="course-input">Course Name</label>
-          <input id="course-input" className="course-input" />
+          <input
+            autoFocus
+            id="course-input"
+            value={courseNameText}
+            className="course-input"
+            onChange={(event) => {
+              setCourseNameText(event.target.value);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                onCreateCourse(courseNameText);
+                setCourseNameText("");
+                setCreating(false);
+              }
+            }}
+          />
         </span>
       ) : (
         <button
@@ -44,7 +59,6 @@ export default function Sidebar({
           type="button"
           onClick={() => {
             setCreating(true);
-            setCourseNameText("");
           }}
         >
           New Course
