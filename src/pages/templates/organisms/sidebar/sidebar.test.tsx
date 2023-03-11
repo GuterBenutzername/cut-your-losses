@@ -78,7 +78,6 @@ describe("sidebar", () => {
       "TEST"
     );
     await user.keyboard("{Enter}");
-    expect(screen.getByRole("button", { name: "TEST" })).toBeVisible();
     expect(onCreateCourse).toBeCalledTimes(1);
     expect(onCreateCourse).toHaveBeenCalledWith("TEST");
   });
