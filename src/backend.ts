@@ -123,7 +123,7 @@ function seperateArrayByWeights(array: Assignment[], weights: number[]) {
 
 // Get a weighted average of assignments with three different weight amounts
 export function weightedAverage(array: Assignment[], weights: number[]) {
-  if (weights.length === 0) {
+  if (weights.length === 0 || weights.length > 3) {
     return NaN;
   }
 
@@ -132,10 +132,6 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
   }
 
   if (weights.reduce((a, b) => a + b) > 1) {
-    return NaN;
-  }
-
-  if (weights.length === 3 && weights.reduce((a, b) => a + b) < 1) {
     return NaN;
   }
 
