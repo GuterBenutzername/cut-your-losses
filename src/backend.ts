@@ -1,6 +1,19 @@
 import { v4 as uuidv4 } from "uuid";
 import { immerable } from "immer";
 
+function randConVowString(len: number) {
+  const cons = "bcdfghjklmnpqrstvwxyz".split("");
+  const vow = "aeiou".split("");
+  let newstr = "";
+  for (let i = 0; i < len / 2; i++)
+    newstr += randselect(cons) + randselect(vow);
+  return newstr;
+}
+
+function randselect(arr: string[]) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 export function isAssignment(argument: unknown): argument is Assignment {
   return (
     argument !== null &&
@@ -28,7 +41,7 @@ export function isAssignmentArray(argument: unknown): argument is Assignment[] {
 
 export function fakeAssignment(weights: number[]): Assignment {
   return new Assignment(
-    (Math.random() + 1).toString(36).substring(7),
+    randConVowString(6),
     Math.round(Math.random() * 10000) / 100,
     weights[Math.floor(Math.random() * weights.length)]
   );
@@ -48,7 +61,7 @@ export function fakeAssignmentArray(
 
 export function fakeCourse(assignmentsLength: number) {
   return new Course(
-    (Math.random() + 1).toString(36).substring(7),
+    randConVowString(6),
     fakeAssignmentArray([0.6, 0.25, 0.15], assignmentsLength)
   );
 }
