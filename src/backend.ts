@@ -40,9 +40,10 @@ export function isAssignmentArray(argument: unknown): argument is Assignment[] {
 }
 
 export function fakeAssignment(weights: number[]): Assignment {
+  const x = Math.random();
   return new Assignment(
     randConVowString(6),
-    Math.round(Math.random() * 10000) / 100,
+    Math.round(-100 * x ** 2 + 100 * x + 75),
     weights[Math.floor(Math.random() * weights.length)],
     Math.random() > 0.85
   );
