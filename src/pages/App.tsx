@@ -6,9 +6,9 @@ import "./app.css";
 import produce, { applyPatches, type Patch } from "immer";
 function App() {
   const [courses, setCourses] = useState<Course[]>(
-    isCourseArray(JSON.parse(localStorage.getItem("courses") ?? ""))
+    localStorage.getItem("courses") === null || !isCourseArray(JSON.parse(localStorage.getItem("courses")!))
       ? []
-      : JSON.parse(localStorage.getItem("courses") ?? "") as Course[]
+      : JSON.parse(localStorage.getItem("courses")!) as Course[]
   );
   const [coursePatches, setCoursePatches] = useState<
     Array<{ undo: Patch[]; redo: Patch[] }>
