@@ -1,17 +1,23 @@
-import { useState } from "react";
-import { fakeCourse, Course } from "../backend";
+import { useState, useEffect } from "react";
+import { fakeCourse, Course, isCourseArray } from "../backend";
 import CourseTemplate from "./templates/course";
 import Sidebar from "./templates/organisms/sidebar/sidebar";
 import "./app.css";
 import produce, { applyPatches, type Patch } from "immer";
 function App() {
-  const [courses, setCourses] = useState<Course[]>([fakeCourse(10)]);
+  const [courses, setCourses] = useState<Course[]>(
+    isCourseArray(JSON.parse(localStorage.getItem("courses") ?? ""))
+      ? []
+      : JSON.parse(localStorage.getItem("courses") ?? "") as Course[]
+  );
   const [coursePatches, setCoursePatches] = useState<
     Array<{ undo: Patch[]; redo: Patch[] }>
   >([]);
   const [currentVersion, setCurrentVersion] = useState<number>(-1);
   const [courseIndex, setCourseIndex] = useState<number>(0);
-
+  useEffect(() => {
+    localStorage.setItem("courses", JSON.stringify(courses));
+  }, [courses]);
   const saveChanges = (patches: Patch[], inversePatches: Patch[]) => {
     setCurrentVersion(currentVersion + 1);
     setCoursePatches(
@@ -30,12 +36,9 @@ function App() {
 
   const onModifyCourse = (nextCourseState: Course, index: number) => {
     setCourses(
-      produce(
-        courses,
-        (draft) => {
-          draft[index] = nextCourseState;
-        }
-      )
+      produce(courses, (draft) => {
+        draft[index] = nextCourseState;
+      })
     );
   };
 
