@@ -1,8 +1,9 @@
 import { type Course } from "../../backend";
 import produce from "immer";
 import "./course.css"
-import Assignments from "./organisms/assignments/assignments";
+import Assignments from './organisms/assignments/assignments';
 import ActionButtons from "./organisms/molecules/actionButtons/actionButtons";
+import Averages from "./organisms/averages";
 export default function CourseTemplate({
   course,
   courseIndex,
@@ -72,6 +73,7 @@ export default function CourseTemplate({
         }}
       />
       <div className="assignments-wrapper">
+        <Averages assignments={course.assignments} />
         <Assignments
           assignments={course.assignments}
           onModifyAssignment={onModifyAssignment}

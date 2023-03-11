@@ -34,8 +34,7 @@ function App() {
         courses,
         (draft) => {
           draft[index] = nextCourseState;
-        },
-        saveChanges
+        }
       )
     );
   };

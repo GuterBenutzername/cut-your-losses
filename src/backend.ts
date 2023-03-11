@@ -43,7 +43,8 @@ export function fakeAssignment(weights: number[]): Assignment {
   return new Assignment(
     randConVowString(6),
     Math.round(Math.random() * 10000) / 100,
-    weights[Math.floor(Math.random() * weights.length)]
+    weights[Math.floor(Math.random() * weights.length)],
+    Math.random() > 0.85
   );
 }
 

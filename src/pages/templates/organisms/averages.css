@@ -1,0 +1,54 @@
+.averages {
+  display: flex;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  justify-content: space-evenly;
+  z-index: 1;
+  background-color: #fff;
+  align-self: flex-start;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.arrow {
+    position: relative;
+    top: 2px;
+    margin-right: -4px;
+
+}
+
+.average-failing,
+.arrow-down {
+  color: #f00;
+}
+
+.arrow-up {
+  color: #0b0;
+}
+
+.arrow-right {
+    color: #000;
+    margin-right: 0;
+}
+
+.average {
+  font-weight: 700;
+  font-size: x-large;
+}
+
+.theory-average {
+  font-weight: 700;
+  font-size: x-large;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.change {
+  font-weight: initial;
+  font-size: small;
+  color: #000;
+  top: 6px;
+  position: relative;
+}
