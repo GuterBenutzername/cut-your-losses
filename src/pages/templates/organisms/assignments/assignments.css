@@ -1,7 +1,10 @@
 .assignments {
   display: flex;
   flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
   gap: 6px;
+  width: 100%;
 }
 
 .assignments input,

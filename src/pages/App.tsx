@@ -76,21 +76,23 @@ function App() {
     courses.length > 0 ? courses[courseIndex] : new Course("", []);
 
   return (
-    <div className="app">
+    <>
       <Sidebar
         currentCourse={courseIndex}
         courses={courses}
         onSwapCourse={onSwapCourse}
         onCreateCourse={onCreateCourse}
       />
-      <CourseTemplate
-        course={currentCourse}
-        courseIndex={courseIndex}
-        onDeleteCourse={onDeleteCourse}
-        onModifyCourse={onModifyCourse}
-        onUndo={onUndo}
-      />
-    </div>
+      <div className="app">
+        <CourseTemplate
+          course={currentCourse}
+          courseIndex={courseIndex}
+          onDeleteCourse={onDeleteCourse}
+          onModifyCourse={onModifyCourse}
+          onUndo={onUndo}
+        />
+      </div>
+    </>
   );
 }
 

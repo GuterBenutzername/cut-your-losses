@@ -1,5 +1,6 @@
 import { type Course } from "../../backend";
 import produce from "immer";
+import "./course.css"
 import Assignments from "./organisms/assignments/assignments";
 import ActionButtons from "./organisms/molecules/actionButtons/actionButtons";
 export default function CourseTemplate({
@@ -70,11 +71,13 @@ export default function CourseTemplate({
           onDeleteCourse(courseIndex);
         }}
       />
-      <Assignments
-        assignments={course.assignments}
-        onModifyAssignment={onModifyAssignment}
-        onDeleteAssignment={onDeleteAssignment}
-      />
+      <div className="assignments-wrapper">
+        <Assignments
+          assignments={course.assignments}
+          onModifyAssignment={onModifyAssignment}
+          onDeleteAssignment={onDeleteAssignment}
+        />
+      </div>
     </div>
   );
 }
