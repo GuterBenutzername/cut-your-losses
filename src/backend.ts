@@ -39,6 +39,27 @@ export function isAssignmentArray(argument: unknown): argument is Assignment[] {
   );
 }
 
+export function isCourse(argument: unknown): argument is Course {
+  return (
+    argument !== null &&
+    typeof argument === "object" &&
+    "name" in argument &&
+    "assignments" in argument &&
+    "id" in argument &&
+    typeof argument.name === "string" &&
+    isAssignmentArray(argument.assignments) &&
+    typeof argument.id === "string"
+  )
+}
+
+export function isCourseArray(argument: unknown): argument is Course[] {
+  return (
+    argument !== null &&
+    Array.isArray(argument) &&
+    argument.every((element) => isCourse(element))
+  )
+}
+
 export function fakeAssignment(weights: number[]): Assignment {
   const x = Math.random();
   return new Assignment(
