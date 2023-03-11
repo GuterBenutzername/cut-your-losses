@@ -52,14 +52,16 @@ export default function AssignmentCard({
           onModifyAssignment(event, index, "weight");
         }}
       />
-      <input
-        type="checkbox"
-        aria-label="theoretical"
-        checked={assignment.theoretical}
-        onChange={(event) => {
-          onModifyAssignment(event, index, "theoretical");
-        }}
-      />
+      <span className="theoretical-wrapper">
+        <input
+          type="checkbox"
+          aria-label="theoretical"
+          checked={assignment.theoretical}
+          onChange={(event) => {
+            onModifyAssignment(event, index, "theoretical");
+          }}
+        />
+      </span>
     </div>
   );
 }
