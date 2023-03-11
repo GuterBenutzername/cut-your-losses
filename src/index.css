@@ -437,3 +437,7 @@ pre {
     transition-duration: 0s !important; /* 4 */
   }
 }
+
+body {
+  overflow-x: hidden;
+}

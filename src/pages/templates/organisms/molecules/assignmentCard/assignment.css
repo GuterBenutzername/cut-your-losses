@@ -10,6 +10,20 @@
   border-radius: 2px;
 }
 
+@media only screen and (max-width: 600px) {
+  .assignment {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+    width: 90vw;
+    height: 2rem;
+    padding: 0;
+    border: solid 2px #000;
+    border-radius: 2px;
+  }
+}
+
 .assignment input {
   width: 50%;
 }
