@@ -1,4 +1,3 @@
-// This component is very simple right now, which means no unit test is neccessary.
 import { type Assignment } from "../../../../backend";
 import AssignmentCard from "../molecules/assignmentCard/assignment";
 import "./assignments.css";
