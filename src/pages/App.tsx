@@ -16,10 +16,10 @@ function App() {
     setCurrentVersion(currentVersion + 1);
     setCoursePatches(
       produce(coursePatches, (draft) => {
-        draft.push({
+        draft[currentVersion + 1] = {
           undo: inversePatches,
           redo: patches,
-        });
+        };
         if (draft.length > 100) {
           draft.shift();
           setCurrentVersion(currentVersion - 1);
