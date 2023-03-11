@@ -11,7 +11,7 @@
 }
 
 .assignment input {
-    width: 50%;
+  width: 50%;
 }
 
 .assignment input[aria-label="weight"] {
@@ -25,6 +25,6 @@
 }
 
 .theoretical-wrapper {
- width: 50%; 
- text-align: center;
+  width: 50%;
+  text-align: center;
 }

@@ -12,7 +12,7 @@ export default function CourseTemplate({
   course: Course;
   courseIndex: number;
   onModifyCourse: (nextCourseState: Course, index: number) => void;
-  onDeleteCourse: (index:number) => void;
+  onDeleteCourse: (index: number) => void;
   onUndo: () => void;
 }) {
   const onModifyAssignment = (
@@ -64,12 +64,17 @@ export default function CourseTemplate({
 
   return (
     <div>
+      <ActionButtons
+        onUndo={onUndo}
+        onDeleteCourse={() => {
+          onDeleteCourse(courseIndex);
+        }}
+      />
       <Assignments
         assignments={course.assignments}
         onModifyAssignment={onModifyAssignment}
         onDeleteAssignment={onDeleteAssignment}
       />
-      <ActionButtons onUndo={onUndo} onDeleteCourse={() => {onDeleteCourse(courseIndex)}} />
     </div>
   );
 }

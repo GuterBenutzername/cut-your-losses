@@ -1,12 +1,11 @@
 .assignments {
-    position: absolute;
-    left: 25vw;
-    display: flex;
-    flex-flow: column nowrap;
-    gap: 6px;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 6px;
 }
 
-.assignments input, .assignments button {
-    border-top: 0;
-    border-bottom: 0;
+.assignments input,
+.assignments button {
+  border-top: 0;
+  border-bottom: 0;
 }

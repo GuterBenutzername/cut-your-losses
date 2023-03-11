@@ -2,6 +2,7 @@ import { useState } from "react";
 import { fakeCourse, Course } from "../backend";
 import CourseTemplate from "./templates/course";
 import Sidebar from "./templates/organisms/sidebar/sidebar";
+import "./app.css";
 import produce, { applyPatches, type Patch } from "immer";
 function App() {
   const [courses, setCourses] = useState<Course[]>([fakeCourse(10)]);
@@ -24,7 +25,6 @@ function App() {
           setCurrentVersion(currentVersion - 1);
         }
       })
-      
     );
   };
 
@@ -76,7 +76,7 @@ function App() {
     courses.length > 0 ? courses[courseIndex] : new Course("", []);
 
   return (
-    <div className="App">
+    <div className="app">
       <Sidebar
         currentCourse={courseIndex}
         courses={courses}
