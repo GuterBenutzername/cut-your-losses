@@ -1,14 +1,19 @@
 import { type Course } from "../../backend";
 import produce from "immer";
 import Assignments from "./organisms/assignments/assignments";
+import ActionButtons from "./organisms/molecules/actionButtons/actionButtons";
 export default function CourseTemplate({
   course,
-  index: courseIndex,
+  courseIndex,
   onModifyCourse,
+  onDeleteCourse,
+  onUndo,
 }: {
   course: Course;
-  index: number;
+  courseIndex: number;
   onModifyCourse: (nextCourseState: Course, index: number) => void;
+  onDeleteCourse: (index:number) => void;
+  onUndo: () => void;
 }) {
   const onModifyAssignment = (
     event: { target: { value: string } },
@@ -64,6 +69,7 @@ export default function CourseTemplate({
         onModifyAssignment={onModifyAssignment}
         onDeleteAssignment={onDeleteAssignment}
       />
+      <ActionButtons onUndo={onUndo} onDeleteCourse={() => {onDeleteCourse(courseIndex)}} />
     </div>
   );
 }
