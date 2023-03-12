@@ -1,4 +1,4 @@
-import { type Course } from "../../../../backend";
+import { type Course } from "../../backend";
 import "./sidebar.css";
 import { useEffect, useState } from "react";
 

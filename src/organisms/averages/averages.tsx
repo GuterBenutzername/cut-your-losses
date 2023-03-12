@@ -1,4 +1,4 @@
-import { weightedAverage, type Assignment } from "../../../backend";
+import { weightedAverage, type Assignment } from "../../backend";
 import "./averages.css";
 import classNames from "classnames";
 export default function Averages({

@@ -1,5 +1,5 @@
-import { type Assignment } from "../../../../backend";
-import AssignmentCard from "../molecules/assignmentCard/assignment";
+import { type Assignment } from "../../backend";
+import AssignmentCard from "../../molecules/assignmentCard/assignment";
 import "./assignments.css";
 
 export default function Assignments({

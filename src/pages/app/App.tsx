@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { fakeCourse, Course, isCourseArray, Assignment } from "../backend";
-import CourseTemplate from "./templates/course";
-import Sidebar from "./templates/organisms/sidebar/sidebar";
+import { fakeCourse, Course, isCourseArray, Assignment } from "../../backend";
+import CourseTemplate from "../../templates/course/course";
+import Sidebar from "../../templates/sidebar/sidebar";
 import "./app.css";
 import produce, { applyPatches, type Patch } from "immer";
 

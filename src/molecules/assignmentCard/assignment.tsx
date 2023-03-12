@@ -1,5 +1,5 @@
 import { type Ref, forwardRef, useImperativeHandle, useRef } from "react";
-import { type Assignment } from "../../../../../backend";
+import { type Assignment } from "../../backend";
 import "./assignment.css";
 
 function AssignmentCard(
