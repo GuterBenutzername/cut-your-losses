@@ -18,9 +18,9 @@ function AssignmentCard(
       property: "name" | "grade" | "weight" | "theoretical"
     ) => void;
     onDeleteAssignment: (index: number) => void;
-    autoFocus: boolean
+    autoFocus: boolean;
   },
-  ref: Ref<{focusFirst: () => void}> | undefined
+  ref: Ref<{ focusFirst: () => void }> | undefined
 ) {
   const nameInputRef = useRef<HTMLInputElement>(null);
   useImperativeHandle(ref, () => ({

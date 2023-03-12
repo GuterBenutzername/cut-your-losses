@@ -10,7 +10,7 @@ function arrayEquals(a: unknown, b: unknown) {
     Array.isArray(a) &&
     Array.isArray(b) &&
     a.length === b.length &&
-    a.every((val, index) => val === b[index])
+    a.every((value, index) => value === b[index])
   );
 }
 
@@ -43,7 +43,7 @@ function App() {
         }
 
         if (currentVersion < coursePatches.length - 1) {
-          draft.splice(currentVersion + 2)
+          draft.splice(currentVersion + 2);
         }
       })
     );
@@ -99,10 +99,12 @@ function App() {
         const toChange = draft[courseIndex]?.assignments[assignmentIndex];
         const newValue = toChange.theoretical; // Ensure no race conditions occur if this property is changed
         switch (property) {
-          case "name":
+          case "name": {
             toChange.name = event.target.value;
             break;
-          case "weight":
+          }
+
+          case "weight": {
             if (
               Number(event.target.value) <= 1 &&
               Number(event.target.value) > 0
@@ -111,17 +113,24 @@ function App() {
             }
 
             break;
-          case "grade":
+          }
+
+          case "grade": {
             if (Number(event.target.value) >= 0) {
               toChange.grade = Number(event.target.value);
             }
 
             break;
-          case "theoretical":
+          }
+
+          case "theoretical": {
             toChange.theoretical = !newValue;
             break;
-          default:
+          }
+
+          default: {
             break;
+          }
         }
       },
       (patches: Patch[], inversePatches: Patch[]) => {
@@ -150,7 +159,7 @@ function App() {
             }
 
             if (currentVersion < coursePatches.length - 1) {
-              draft.splice(currentVersion + 2)
+              draft.splice(currentVersion + 2);
             }
           })
         );

@@ -12,10 +12,9 @@
 }
 
 .arrow {
-    position: relative;
-    top: 2px;
-    margin-right: -4px;
-
+  position: relative;
+  top: 2px;
+  margin-right: -4px;
 }
 
 .average-failing,
@@ -28,8 +27,8 @@
 }
 
 .arrow-right {
-    color: #000;
-    margin-right: 0;
+  color: #000;
+  margin-right: 0;
 }
 
 .average {

@@ -1,6 +1,7 @@
 import { weightedAverage, type Assignment } from "../../backend";
 import "./averages.css";
 import classNames from "classnames";
+
 export default function Averages({
   assignments,
 }: {
@@ -19,9 +20,11 @@ export default function Averages({
     assignments.filter((assignment) => !assignment.theoretical),
     weights
   );
-  realAverage = isNaN(realAverage) ? 0 : realAverage
+  realAverage = Number.isNaN(realAverage) ? 0 : realAverage;
   let theoreticalAverage = weightedAverage(assignments, weights);
-  theoreticalAverage = isNaN(theoreticalAverage) ? 0 : theoreticalAverage
+  theoreticalAverage = Number.isNaN(theoreticalAverage)
+    ? 0
+    : theoreticalAverage;
   const showTheoreticalAverage = assignments.some(
     (assignment) => assignment.theoretical
   );

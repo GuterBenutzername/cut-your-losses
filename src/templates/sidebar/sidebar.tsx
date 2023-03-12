@@ -17,22 +17,14 @@ export default function Sidebar({
   const [courseNameText, setCourseNameText] = useState("");
   const [width, setWidth] = useState(0);
   useEffect(() => {
-    window.addEventListener(
-      "resize",
-      () => {
-        setWidth(window.innerWidth);
-      },
-      true
-    );
+    const updateWidth = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", updateWidth, true);
     setWidth(window.innerWidth);
     return () => {
-      window.removeEventListener(
-        "resize",
-        () => {
-          setWidth(window.innerWidth);
-        },
-        true
-      );
+      window.removeEventListener("resize", updateWidth, true);
     };
   }, [width]);
   return (

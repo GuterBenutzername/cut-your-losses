@@ -1,9 +1,10 @@
-import { type Course, Assignment } from '../../backend';
 import produce from "immer";
-import "./course.css"
-import Assignments from '../../organisms/assignments/assignments';
+import { type Course, Assignment } from "../../backend";
+import "./course.css";
+import Assignments from "../../organisms/assignments/assignments";
 import ActionButtons from "../../molecules/actionButtons/actionButtons";
 import Averages from "../../organisms/averages/averages";
+
 export default function CourseTemplate({
   course,
   courseIndex,
@@ -27,8 +28,6 @@ export default function CourseTemplate({
   onUndo: () => void;
   onRedo: () => void;
 }) {
-
-
   return (
     <div>
       <ActionButtons
