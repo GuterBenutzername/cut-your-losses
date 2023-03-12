@@ -28,3 +28,13 @@
   align-items: center;
   justify-content: center;
 }
+
+.redo-button {
+  border-radius: 4px;
+  padding: 2px;
+  height: min-content;
+  width: min-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

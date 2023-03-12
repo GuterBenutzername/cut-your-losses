@@ -3,9 +3,11 @@ import "./actionbuttons.css";
 export default function ActionButtons({
   onDeleteCourse,
   onUndo,
+  onRedo,
 }: {
   onDeleteCourse: () => void;
   onUndo: () => void;
+  onRedo: () => void;
 }) {
   return (
     <span className="action-buttons">
@@ -17,6 +19,15 @@ export default function ActionButtons({
         }}
       >
         <span className="material-symbols-outlined">undo</span>
+      </button>
+      <button
+        type="button"
+        className="redo-button"
+        onClick={() => {
+          onRedo();
+        }}
+      >
+        <span className="material-symbols-outlined">redo</span>
       </button>
       <button
         type="button"

@@ -7,74 +7,33 @@ import Averages from "./organisms/averages";
 export default function CourseTemplate({
   course,
   courseIndex,
-  onModifyCourse,
+  onModifyAssignment,
+  onDeleteAssignment,
+  onAddAssignment,
   onDeleteCourse,
   onUndo,
+  onRedo,
 }: {
   course: Course;
   courseIndex: number;
-  onModifyCourse: (nextCourseState: Course, index: number) => void;
+  onModifyAssignment: (
+    event: { target: { value: string } },
+    index: number,
+    property: "name" | "grade" | "weight" | "theoretical"
+  ) => void;
+  onDeleteAssignment: (index: number) => void;
+  onAddAssignment: () => void;
   onDeleteCourse: (index: number) => void;
   onUndo: () => void;
+  onRedo: () => void;
 }) {
-  const onModifyAssignment = (
-    event: { target: { value: string } },
-    assignmentIndex: number,
-    property: "name" | "grade" | "weight" | "theoretical"
-  ) => {
-    const nextCourseState = produce(course, (draft) => {
-      const newValue = draft.assignments[assignmentIndex].theoretical; // Ensure no race conditions occur if this property is changed
-      switch (property) {
-        case "name":
-          draft.assignments[assignmentIndex].name = event.target.value;
-          break;
-        case "weight":
-          if (
-            Number(event.target.value) <= 1 &&
-            Number(event.target.value) > 0
-          ) {
-            draft.assignments[assignmentIndex].weight = Number(
-              event.target.value
-            );
-          }
 
-          break;
-        case "grade":
-          if (Number(event.target.value) >= 0) {
-            draft.assignments[assignmentIndex].grade = Number(
-              event.target.value
-            );
-          }
-
-          break;
-        case "theoretical":
-          draft.assignments[assignmentIndex].theoretical = !newValue;
-          break;
-        default:
-          break;
-      }
-    });
-    onModifyCourse(nextCourseState, courseIndex);
-  };
-
-  const onDeleteAssignment = (assignmentIndex: number) => {
-    const nextCourseState = produce(course, (draft) => {
-      draft.assignments.splice(assignmentIndex, 1);
-    });
-    onModifyCourse(nextCourseState, courseIndex);
-  };
-
-  const onAddAssignment = () => {
-    const nextCourseState = produce(course, (draft) => {
-      draft.assignments.unshift(new Assignment("", 0, 0))
-    })
-    onModifyCourse(nextCourseState, courseIndex);
-  }
 
   return (
     <div>
       <ActionButtons
         onUndo={onUndo}
+        onRedo={onRedo}
         onDeleteCourse={() => {
           onDeleteCourse(courseIndex);
         }}
