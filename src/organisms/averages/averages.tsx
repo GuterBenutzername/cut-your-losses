@@ -36,14 +36,24 @@ export default function Averages({
     theory: showTheoreticalAverage,
     "average-failing": realAverage < 70 && realAverage > 0,
   });
-  const arrow =
-    realAverage < theoreticalAverage ? (
-      <span className="material-symbols-outlined">north</span>
-    ) : realAverage > theoreticalAverage ? (
-      <span className="material-symbols-outlined">south</span>
-    ) : (
-      <span className="material-symbols-outlined">east</span>
-    );
+  let arrow;
+
+  if (realAverage > theoreticalAverage) {
+    arrow =
+      realAverage < theoreticalAverage ? (
+        <span className="material-symbols-outlined">north</span>
+      ) : (
+        <span className="material-symbols-outlined">south</span>
+      );
+  } else {
+    arrow =
+      realAverage < theoreticalAverage ? (
+        <span className="material-symbols-outlined">north</span>
+      ) : (
+        <span className="material-symbols-outlined">east</span>
+      );
+  }
+
   const arrowClass = classNames("arrow", {
     "arrow-up": realAverage < theoreticalAverage,
     "arrow-down": realAverage > theoreticalAverage,
@@ -55,6 +65,16 @@ export default function Averages({
     useGrouping: false,
     minimumFractionDigits: 2,
   });
+  let changeElement;
+
+  if (theoreticalAverage - realAverage > 0) {
+    changeElement = `+${change}`;
+  } else if (theoreticalAverage - realAverage === 0) {
+    changeElement = `=${change}`;
+  } else {
+    changeElement = `${change}`;
+  }
+
   return (
     <div className="averages">
       <span>
@@ -76,13 +96,7 @@ export default function Averages({
               useGrouping: false,
               minimumFractionDigits: 2,
             })}
-            <span className="change">
-              {theoreticalAverage - realAverage > 0
-                ? `+${change}`
-                : theoreticalAverage - realAverage === 0
-                ? `=${change}`
-                : `${change}`}
-            </span>
+            <span className="change">{changeElement}</span>
           </span>
         </span>
       )}

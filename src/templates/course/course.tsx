@@ -1,5 +1,4 @@
-import produce from "immer";
-import { type Course, Assignment } from "../../backend";
+import { type Course } from "../../backend";
 import "./course.css";
 import Assignments from "../../organisms/assignments/assignments";
 import ActionButtons from "../../molecules/actionButtons/actionButtons";

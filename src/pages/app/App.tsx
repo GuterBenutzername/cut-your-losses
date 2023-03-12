@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fakeCourse, Course, isCourseArray, Assignment } from "../../backend";
+import { Course, isCourseArray, Assignment } from "../../backend";
 import CourseTemplate from "../../templates/course/course";
 import Sidebar from "../../templates/sidebar/sidebar";
 import "./app.css";
@@ -40,6 +40,36 @@ function App() {
         if (draft.length > 100) {
           draft.shift();
           setCurrentVersion(currentVersion - 1);
+        }
+
+        if (currentVersion < coursePatches.length - 1) {
+          draft.splice(currentVersion + 2);
+        }
+      })
+    );
+  };
+
+  const saveChangesOnModifyAssignment = (patches: Patch[], inversePatches: Patch[]) => {
+    setCoursePatches(
+      produce(coursePatches, (draft) => {
+        if (arrayEquals(
+          coursePatches[coursePatches.length - 1]?.redo[0].path,
+          patches[0].path
+        )) {
+          draft[currentVersion] = {
+            undo: draft[currentVersion].undo,
+            redo: patches,
+          };
+        } else {
+          draft[currentVersion + 1] = {
+            undo: inversePatches,
+            redo: patches,
+          };
+          setCurrentVersion(currentVersion + 1);
+          if (draft.length > 100) {
+            draft.shift();
+            setCurrentVersion(currentVersion - 1);
+          }
         }
 
         if (currentVersion < coursePatches.length - 1) {
@@ -133,37 +163,7 @@ function App() {
           }
         }
       },
-      (patches: Patch[], inversePatches: Patch[]) => {
-        setCoursePatches(
-          produce(coursePatches, (draft) => {
-            if (
-              arrayEquals(
-                coursePatches[coursePatches.length - 1]?.redo[0].path,
-                patches[0].path
-              )
-            ) {
-              draft[currentVersion] = {
-                undo: draft[currentVersion].undo,
-                redo: patches,
-              };
-            } else {
-              draft[currentVersion + 1] = {
-                undo: inversePatches,
-                redo: patches,
-              };
-              setCurrentVersion(currentVersion + 1);
-              if (draft.length > 100) {
-                draft.shift();
-                setCurrentVersion(currentVersion - 1);
-              }
-            }
-
-            if (currentVersion < coursePatches.length - 1) {
-              draft.splice(currentVersion + 2);
-            }
-          })
-        );
-      }
+      saveChangesOnModifyAssignment
     );
     setCourses(nextCoursesState);
   };
