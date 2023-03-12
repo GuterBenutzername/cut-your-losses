@@ -8,6 +8,7 @@ function AssignmentCard(
     index,
     onModifyAssignment,
     onDeleteAssignment,
+    autoFocus,
   }: {
     assignment: Assignment;
     index: number;
@@ -17,6 +18,7 @@ function AssignmentCard(
       property: "name" | "grade" | "weight" | "theoretical"
     ) => void;
     onDeleteAssignment: (index: number) => void;
+    autoFocus: boolean
   },
   ref: Ref<{focusFirst: () => void}> | undefined
 ) {
@@ -38,7 +40,7 @@ function AssignmentCard(
         X
       </button>
       <input
-        ref={nameInputRef}
+        autoFocus={autoFocus}
         aria-label="name"
         value={assignment.name}
         onChange={(event) => {
