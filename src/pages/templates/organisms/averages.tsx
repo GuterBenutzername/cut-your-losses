@@ -15,21 +15,23 @@ export default function Averages({
     weights = weights.concat(Array(3).fill(0)).slice(0, 3);
   }
 
-  const realAverage = weightedAverage(
+  let realAverage = weightedAverage(
     assignments.filter((assignment) => !assignment.theoretical),
     weights
   );
-  const theoreticalAverage = weightedAverage(assignments, weights);
+  realAverage = isNaN(realAverage) ? 0 : realAverage
+  let theoreticalAverage = weightedAverage(assignments, weights);
+  theoreticalAverage = isNaN(theoreticalAverage) ? 0 : theoreticalAverage
   const showTheoreticalAverage = assignments.some(
     (assignment) => assignment.theoretical
   );
 
   const theoryAverageClass = classNames("theory-average", {
-    "average-failing": theoreticalAverage < 70,
+    "average-failing": theoreticalAverage < 70 && theoreticalAverage > 0,
   });
   const realAverageClass = classNames("average", {
     theory: showTheoreticalAverage,
-    "average-failing": realAverage < 70,
+    "average-failing": realAverage < 70 && realAverage > 0,
   });
   const arrow =
     realAverage < theoreticalAverage ? (
