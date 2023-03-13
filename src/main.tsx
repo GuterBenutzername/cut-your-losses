@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom/client.js";
+import ReactDOM from "react-dom/client";
 import App from "./pages/app/App";
 import "./index.css";
 import { enablePatches } from "immer";
