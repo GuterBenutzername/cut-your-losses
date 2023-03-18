@@ -101,6 +101,18 @@ function App() {
     setCourseIndex(0);
   };
 
+  const onImportCourse = (course: Course) => {
+    const nextState = produce(
+      courses,
+      (draft) => {
+        draft.unshift(course)
+      },
+      saveChanges
+    );
+    setCourses(nextState)
+    setCourseIndex(0);
+  }
+
   const onSwapCourse = (index: number) => {
     setCourseIndex(index);
   };
@@ -196,10 +208,11 @@ function App() {
         currentCourse={courseIndex}
         courses={courses}
         onSwapCourse={onSwapCourse}
+        onImportCourse={onImportCourse}
         onCreateCourse={onCreateCourse}
       />
       <div className="app">
-        <CourseTemplate
+        {courses.length > 0 && <CourseTemplate
           course={currentCourse}
           courseIndex={courseIndex}
           onDeleteCourse={onDeleteCourse}
@@ -208,7 +221,7 @@ function App() {
           onAddAssignment={onAddAssignment}
           onUndo={onUndo}
           onRedo={onRedo}
-        />
+        />}
       </div>
     </>
   );

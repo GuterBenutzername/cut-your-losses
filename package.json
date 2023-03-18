@@ -18,7 +18,9 @@
     "@types/uuid": "^9.0.1",
     "classnames": "^2.3.2",
     "immer": "^9.0.19",
+    "papaparse": "^5.4.0",
     "react": "^18.2.0",
+    "react-animated-popup": "^0.1.8",
     "react-dom": "^18.2.0",
     "uuid": "^9.0.0"
   },
@@ -26,6 +28,7 @@
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
     "@playwright/test": "^1.31.2",
+    "@types/papaparse": "^5.3.7",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@typescript-eslint/eslint-plugin": "^5.54.1",

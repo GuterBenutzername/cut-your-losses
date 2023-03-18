@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { immerable } from "immer";
+import Papa from "papaparse";
 
 function randConVowString(length: number) {
   const cons = "bcdfghjklmnpqrstvwxyz".split("");
@@ -14,7 +15,7 @@ function randselect(array: string[]) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-export function isAssignment(argument: unknown): argument is Assignment {
+export function isPartialAssignment(argument: unknown): argument is Assignment {
   return (
     argument !== null &&
     typeof argument === "object" &&
@@ -22,12 +23,28 @@ export function isAssignment(argument: unknown): argument is Assignment {
     "weight" in argument &&
     "grade" in argument &&
     "theoretical" in argument &&
-    "id" in argument &&
     typeof argument.name === "string" &&
     typeof argument.weight === "number" &&
     typeof argument.grade === "number" &&
-    typeof argument.theoretical === "boolean" &&
+    typeof argument.theoretical === "boolean"
+  );
+}
+
+export function isAssignment(argument: unknown): argument is Assignment {
+  return (
+    isPartialAssignment(argument) &&
+    "id" in argument &&
     typeof argument.id === "string"
+  );
+}
+
+export function isPartialAssignmentArray(
+  argument: unknown
+): argument is Assignment[] {
+  return (
+    argument !== null &&
+    Array.isArray(argument) &&
+    argument.every((element) => isPartialAssignment(element))
   );
 }
 
@@ -222,4 +239,24 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
         100
     ) / 100
   );
+}
+
+export function importFromCsv(importCsv: string) {
+  const { data } = Papa.parse(importCsv, {
+    header: true,
+    dynamicTyping: true,
+    skipEmptyLines: true,
+  });
+  if (isPartialAssignmentArray(data)) {
+    data.forEach((assignment) => {
+      assignment.id = uuidv4();
+    });
+    if (isAssignmentArray(data)) {
+      return data;
+    } 
+    
+    throw new Error("Import failed during ID creation step!");
+  } else {
+    throw new Error("Import failed during parsing step! (invalid data?)")
+  }
 }
