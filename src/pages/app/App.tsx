@@ -49,13 +49,18 @@ function App() {
     );
   };
 
-  const saveChangesOnModifyAssignment = (patches: Patch[], inversePatches: Patch[]) => {
+  const saveChangesOnModifyAssignment = (
+    patches: Patch[],
+    inversePatches: Patch[]
+  ) => {
     setCoursePatches(
       produce(coursePatches, (draft) => {
-        if (arrayEquals(
-          coursePatches[coursePatches.length - 1]?.redo[0].path,
-          patches[0].path
-        )) {
+        if (
+          arrayEquals(
+            coursePatches[coursePatches.length - 1]?.redo[0].path,
+            patches[0].path
+          )
+        ) {
           draft[currentVersion] = {
             undo: draft[currentVersion].undo,
             redo: patches,
@@ -105,13 +110,13 @@ function App() {
     const nextState = produce(
       courses,
       (draft) => {
-        draft.unshift(course)
+        draft.unshift(course);
       },
       saveChanges
     );
-    setCourses(nextState)
+    setCourses(nextState);
     setCourseIndex(0);
-  }
+  };
 
   const onSwapCourse = (index: number) => {
     setCourseIndex(index);
@@ -212,16 +217,18 @@ function App() {
         onCreateCourse={onCreateCourse}
       />
       <div className="app">
-        {courses.length > 0 && <CourseTemplate
-          course={currentCourse}
-          courseIndex={courseIndex}
-          onDeleteCourse={onDeleteCourse}
-          onModifyAssignment={onModifyAssignment}
-          onDeleteAssignment={onDeleteAssignment}
-          onAddAssignment={onAddAssignment}
-          onUndo={onUndo}
-          onRedo={onRedo}
-        />}
+        {courses.length > 0 && (
+          <CourseTemplate
+            course={currentCourse}
+            courseIndex={courseIndex}
+            onDeleteCourse={onDeleteCourse}
+            onModifyAssignment={onModifyAssignment}
+            onDeleteAssignment={onDeleteAssignment}
+            onAddAssignment={onAddAssignment}
+            onUndo={onUndo}
+            onRedo={onRedo}
+          />
+        )}
       </div>
     </>
   );

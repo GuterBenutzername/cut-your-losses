@@ -40,7 +40,7 @@ export default function Sidebar({
         style={{
           textAlign: "center",
           width: "70vw",
-          maxWidth: "600px !important"
+          maxWidth: "600px !important",
         }}
         onClose={() => {
           setImportCsvOpen(false);
@@ -50,8 +50,8 @@ export default function Sidebar({
           Manually import from CSV (aka copy-paste from Excel) <br />
           The table <i>must</i> have a header row that contains `name`, `grade`,
           `weight`, and `theoretical`, where `grade` and `weight` are numbers
-          and `theoretical` is &quot;true&quot; or &quot;false&quot;.
-          The column order does not matter.
+          and `theoretical` is &quot;true&quot; or &quot;false&quot;. The column
+          order does not matter.
         </p>
         <br />
         <textarea

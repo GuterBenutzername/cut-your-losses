@@ -253,10 +253,10 @@ export function importFromCsv(importCsv: string) {
     });
     if (isAssignmentArray(data)) {
       return data;
-    } 
-    
+    }
+
     throw new Error("Import failed during ID creation step!");
   } else {
-    throw new Error("Import failed during parsing step! (invalid data?)")
+    throw new Error("Import failed during parsing step! (invalid data?)");
   }
 }
