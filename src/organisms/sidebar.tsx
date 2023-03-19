@@ -77,14 +77,27 @@ export default function Sidebar({
       window.removeEventListener("resize", updateWidth, true);
     };
   }, [width]);
+  const onImportCsv = () => {
+    if (importCsvName.trim() === "") {
+      return;
+    }
+
+    const importedAssignments = importFromCsv(importCsv);
+    if (importedAssignments !== undefined) {
+      onImportCourse(new Course(importCsvName, importedAssignments));
+      setImportCsvOpen(false);
+    }
+  };
+
   return (
     <>
       <Popup
         visible={importCsvOpen}
         className={css`
-          textAlign: "center",
-          width: "70vw",
-          maxWidth: "600px !important",`}
+          text-align: center;
+          width: 70vw;
+          max-width: 600px !important;
+        `}
         onClose={() => {
           setImportCsvOpen(false);
         }}
@@ -98,7 +111,10 @@ export default function Sidebar({
         </p>
         <br />
         <textarea
-          className={css`width: "400px", height: "350px" `}
+          className={css`
+            width: 400px;
+            height: 350px;
+          `}
           value={importCsv}
           onChange={(event) => {
             setImportCsv(event.target.value);
@@ -111,32 +127,42 @@ export default function Sidebar({
         </p>
         <span
           className={css`
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",`}
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+          `}
         >
-          <input
-            placeholder="Name"
-            value={importCsvName}
-            onChange={(event) => {
-              setImportCsvName(event.target.value);
-            }}
-          />
-          <button
-            type="button"
-            onClick={() => {
-              if (importCsvName.trim() === "") {
-                return;
-              }
-
-              const importedAssignments = importFromCsv(importCsv);
-              if (importedAssignments !== undefined) {
-                onImportCourse(new Course(importCsvName, importedAssignments));
-                setImportCsvOpen(false);
-              }
-            }}
+          <span
+            className={css`
+              position: relative;
+            `}
           >
+            <label
+              htmlFor="name"
+              className={css`
+                position: absolute;
+                top: -0.8ex;
+                z-index: 1;
+                left: 1rem;
+                background-color: #fff;
+                height: 10px;
+                line-height: 10px;
+                vertical-align: middle;
+                font-size: smaller;
+              `}
+            >
+              Name
+            </label>
+            <input
+              id="name"
+              value={importCsvName}
+              onChange={(event) => {
+                setImportCsvName(event.target.value);
+              }}
+            />
+          </span>
+          <button type="button" onClick={onImportCsv}>
             Import
           </button>
           <button
