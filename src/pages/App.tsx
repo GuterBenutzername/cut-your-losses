@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Course, isCourseArray, Assignment } from "../../backend";
-import CourseTemplate from "../../templates/course/course";
-import Sidebar from "../../templates/sidebar/sidebar";
-import "./app.css";
+import { Course, isCourseArray, Assignment } from "../backend";
+import CourseTemplate from "../organisms/course";
+import Sidebar from "../organisms/sidebar";
 import produce, { applyPatches, type Patch } from "immer";
+import ActionButtons from "../atoms/actionButtons";
+import { css } from "@emotion/css";
 
 function arrayEquals(a: unknown, b: unknown) {
   return (
@@ -216,17 +217,25 @@ function App() {
         onImportCourse={onImportCourse}
         onCreateCourse={onCreateCourse}
       />
-      <div className="app">
+      <ActionButtons
+        onUndo={onUndo}
+        onRedo={onRedo}
+        onDeleteCourse={() => {
+          onDeleteCourse(courseIndex);
+        }}
+      />
+      <div
+        className={css`
+          display: flex;
+          justify-content: center;
+        `}
+      >
         {courses.length > 0 && (
           <CourseTemplate
             course={currentCourse}
-            courseIndex={courseIndex}
-            onDeleteCourse={onDeleteCourse}
             onModifyAssignment={onModifyAssignment}
             onDeleteAssignment={onDeleteAssignment}
             onAddAssignment={onAddAssignment}
-            onUndo={onUndo}
-            onRedo={onRedo}
           />
         )}
       </div>

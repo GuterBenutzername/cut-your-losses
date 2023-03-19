@@ -1,4 +1,14 @@
-import "./actionbuttons.css";
+import { css, cx } from "@emotion/css";
+
+const buttonStyle = css`
+  border-radius: 4px;
+  padding: 2px;
+  height: min-content;
+  width: min-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 export default function ActionButtons({
   onDeleteCourse,
@@ -10,10 +20,20 @@ export default function ActionButtons({
   onRedo: () => void;
 }) {
   return (
-    <span className="action-buttons">
+    <span
+      className={css`
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        gap: 4px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      `}
+    >
       <button
         type="button"
-        className="undo-button"
+        className={buttonStyle}
         onClick={() => {
           onUndo();
         }}
@@ -22,7 +42,7 @@ export default function ActionButtons({
       </button>
       <button
         type="button"
-        className="redo-button"
+        className={buttonStyle}
         onClick={() => {
           onRedo();
         }}
@@ -31,7 +51,12 @@ export default function ActionButtons({
       </button>
       <button
         type="button"
-        className="delete-button"
+        className={cx(
+          buttonStyle,
+          css`
+            color: #f00;
+          `
+        )}
         onClick={() => {
           onDeleteCourse();
         }}

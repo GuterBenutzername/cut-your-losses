@@ -1,6 +1,22 @@
-import { weightedAverage, type Assignment } from "../../backend";
-import "./averages.css";
-import classNames from "classnames";
+import { weightedAverage, type Assignment } from "../backend";
+import { css, cx } from "@emotion/css";
+
+const averageStyle = css`
+  font-weight: 700;
+  font-size: x-large;
+`;
+
+const theoreticalAverageStyle = css`
+  font-weight: 700;
+  font-size: x-large;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+`;
+
+const failing = css`
+  color: #f00;
+`;
 
 export default function Averages({
   assignments,
@@ -29,12 +45,12 @@ export default function Averages({
     (assignment) => assignment.theoretical
   );
 
-  const theoryAverageClass = classNames("theory-average", {
-    "average-failing": theoreticalAverage < 70 && theoreticalAverage > 0,
+  const theoryAverageClass = cx(theoreticalAverageStyle, {
+    [failing]: theoreticalAverage < 70 && theoreticalAverage > 0,
   });
-  const realAverageClass = classNames("average", {
+  const realAverageClass = cx(averageStyle, {
     theory: showTheoreticalAverage,
-    "average-failing": realAverage < 70 && realAverage > 0,
+    [failing]: realAverage < 70 && realAverage > 0,
   });
   let arrow;
 
@@ -54,10 +70,15 @@ export default function Averages({
       );
   }
 
-  const arrowClass = classNames("arrow", {
-    "arrow-up": realAverage < theoreticalAverage,
-    "arrow-down": realAverage > theoreticalAverage,
-    "arrow-right": realAverage === theoreticalAverage,
+  const arrowClass = cx("arrow", {
+    [css`
+      color: #0b0;
+    `]: realAverage < theoreticalAverage,
+    [failing]: realAverage > theoreticalAverage,
+    [css`
+      color: #000;
+      margin-right: 0;
+    `]: realAverage === theoreticalAverage,
   });
   const change = (
     Math.round((theoreticalAverage - realAverage) * 100) / 100
@@ -76,7 +97,20 @@ export default function Averages({
   }
 
   return (
-    <div className="averages">
+    <div
+      className={css`
+        display: flex;
+        width: 100%;
+        position: sticky;
+        top: 0;
+        justify-content: space-evenly;
+        z-index: 1;
+        background-color: #fff;
+        align-self: flex-start;
+        flex-wrap: wrap;
+        text-align: center;
+      `}
+    >
       <span>
         Current Average:
         <br />
@@ -96,7 +130,17 @@ export default function Averages({
               useGrouping: false,
               minimumFractionDigits: 2,
             })}
-            <span className="change">{changeElement}</span>
+            <span
+              className={css`
+                font-weight: initial;
+                font-size: small;
+                color: #000;
+                top: 6px;
+                position: relative;
+              `}
+            >
+              {changeElement}
+            </span>
           </span>
         </span>
       )}

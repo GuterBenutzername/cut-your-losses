@@ -1,21 +1,39 @@
-import { type Course } from "../../backend";
-import "./course.css";
-import Assignments from "../../organisms/assignments/assignments";
-import ActionButtons from "../../molecules/actionButtons/actionButtons";
-import Averages from "../../organisms/averages/averages";
+import { type Course } from "../backend";
+import Assignments from "./assignments";
+import Averages from "../molecules/averages";
+import { css } from "@emotion/css";
+
+const primaryViewStyle = css`
+  width: calc(100vw - 150px);
+  height: calc(100vh - 38px);
+  position: absolute;
+  left: 150px;
+  padding: 4px;
+  padding-top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  @media only screen and (max-width: 600px) {
+    width: 100vw;
+    height: calc(100vh - 38px);
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 4px;
+    padding-top: 0;
+    display: flex;
+  }
+`;
 
 export default function CourseTemplate({
   course,
-  courseIndex,
   onModifyAssignment,
   onDeleteAssignment,
   onAddAssignment,
-  onDeleteCourse,
-  onUndo,
-  onRedo,
 }: {
   course: Course;
-  courseIndex: number;
   onModifyAssignment: (
     event: { target: { value: string } },
     index: number,
@@ -23,20 +41,10 @@ export default function CourseTemplate({
   ) => void;
   onDeleteAssignment: (index: number) => void;
   onAddAssignment: () => void;
-  onDeleteCourse: (index: number) => void;
-  onUndo: () => void;
-  onRedo: () => void;
 }) {
   return (
     <div>
-      <ActionButtons
-        onUndo={onUndo}
-        onRedo={onRedo}
-        onDeleteCourse={() => {
-          onDeleteCourse(courseIndex);
-        }}
-      />
-      <div className="assignments-wrapper">
+      <div className={primaryViewStyle}>
         <Averages assignments={course.assignments} />
         <Assignments
           assignments={course.assignments}

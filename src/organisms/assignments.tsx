@@ -1,6 +1,26 @@
-import { type Assignment } from "../../backend";
-import AssignmentCard from "../../molecules/assignmentCard/assignment";
-import "./assignments.css";
+import { type Assignment } from "../backend";
+import AssignmentCard from "../molecules/assignment";
+import { css } from "@emotion/css";
+
+const addAssignmentButtonStyle = css`
+  border: 0 !important;
+  background-color: #ddd;
+  width: 60vw;
+  &:hover {
+    background-color: #ccc;
+  }
+  &:active {
+    background-color: #bbb;
+  }
+  @media only screen and (max-width: 600px) {
+    border: 0 !important;
+    background-color: #ddd;
+    width: 90vw;
+    &:hover {
+      background-color: #ccc;
+    }
+  }
+`;
 
 export default function Assignments({
   assignments,
@@ -18,7 +38,16 @@ export default function Assignments({
   onAddAssignment: () => void;
 }) {
   return (
-    <div className="assignments">
+    <div
+      className={css`
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        width: 100%;
+      `}
+    >
       {assignments.map((assignment, index) => (
         <AssignmentCard
           key={assignment.id}
@@ -31,7 +60,7 @@ export default function Assignments({
       ))}
       <button
         type="button"
-        className="add-assignment"
+        className={addAssignmentButtonStyle}
         onClick={() => {
           onAddAssignment();
         }}

@@ -1,8 +1,52 @@
 import Popup from "react-animated-popup";
-import { importFromCsv, Course } from "../../backend";
-import "./sidebar.css";
+import { importFromCsv, Course } from "../backend";
 import { useEffect, useState } from "react";
+import { css } from "@emotion/css";
 
+const courseButtonStyle = css`
+  background-color: #2c2c2c;
+  height: 32px;
+  border-radius: 8px;
+  width: 145px;
+  color: #ddd;
+  position: relative;
+  border: 0;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  &:hover {
+    background-color: #444;
+  }
+  &:focus {
+    outline: #666 solid 3px;
+  }
+`;
+
+const newCourseInputLabelStyle = css`
+  position: absolute;
+  top: -0.2ex;
+  z-index: 1;
+  left: 1rem;
+  background-color: #333;
+  height: 10px;
+  line-height: 10px;
+  vertical-align: middle;
+  font-size: smaller;
+`;
+const newCourseInputStyle = css`
+  width: 95%;
+  margin: 0;
+  background-color: #222;
+  border-radius: 4px;
+  border: 0;
+  height: 22px;
+  position: relative;
+  color: #fff;
+  &:focus {
+    outline: #666 solid 4px;
+  }
+`;
 export default function Sidebar({
   courses,
   currentCourse,
@@ -37,11 +81,10 @@ export default function Sidebar({
     <>
       <Popup
         visible={importCsvOpen}
-        style={{
+        className={css`
           textAlign: "center",
           width: "70vw",
-          maxWidth: "600px !important",
-        }}
+          maxWidth: "600px !important",`}
         onClose={() => {
           setImportCsvOpen(false);
         }}
@@ -55,7 +98,7 @@ export default function Sidebar({
         </p>
         <br />
         <textarea
-          style={{ width: "400px", height: "350px" }}
+          className={css`width: "400px", height: "350px" `}
           value={importCsv}
           onChange={(event) => {
             setImportCsv(event.target.value);
@@ -67,12 +110,11 @@ export default function Sidebar({
           create, please input the name of the class here:
         </p>
         <span
-          style={{
+          className={css`
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: "100%",
-          }}
+            width: "100%",`}
         >
           <input
             placeholder="Name"
@@ -108,11 +150,27 @@ export default function Sidebar({
         </span>
       </Popup>
       {width > 600 && (
-        <div className="sidebar">
+        <div
+          className={css`
+            position: fixed;
+            height: 100vh;
+            width: 150px;
+            background-color: #333;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 8px;
+            padding-top: 16px;
+            min-width: 0;
+          `}
+        >
           {courses.map((course, index) => (
             <button
               key={course.id}
-              className="course-button"
+              className={courseButtonStyle}
               type="button"
               onClick={(event) => {
                 event.currentTarget.blur();
@@ -120,19 +178,51 @@ export default function Sidebar({
               }}
             >
               {currentCourse === index && (
-                <span className="selected-course">&gt;</span>
+                <span
+                  className={css`
+                    color: #0f0;
+                    margin-right: 2px;
+                  `}
+                >
+                  &gt;
+                </span>
               )}
               {course.name}
             </button>
           ))}
           {creating ? (
-            <span className="new-course-button">
-              <label htmlFor="course-input">Course Name</label>
+            <span
+              className={css`
+                background-color: #2c2c2c;
+                height: 32px;
+                border-radius: 8px;
+                width: 145px;
+                color: #ddd;
+                position: relative;
+                border: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow: visible;
+                &:hover {
+                  background-color: #444;
+                }
+                &:focus {
+                  outline: #666 solid 3px;
+                }
+              `}
+            >
+              <label
+                className={newCourseInputLabelStyle}
+                htmlFor="course-input"
+              >
+                Course Name
+              </label>
               <input
                 autoFocus
                 id="course-input"
                 value={courseNameText}
-                className="course-input"
+                className={newCourseInputStyle}
                 onChange={(event) => {
                   setCourseNameText(event.target.value);
                 }}
@@ -151,7 +241,7 @@ export default function Sidebar({
             </span>
           ) : (
             <button
-              className="new-course-button"
+              className={courseButtonStyle}
               type="button"
               onClick={() => {
                 setCreating(true);
@@ -160,20 +250,24 @@ export default function Sidebar({
               New Course
             </button>
           )}
-          <div className="spacer" />
+          <div
+            className={css`
+              height: 16px;
+            `}
+          />
           <button
             type="button"
-            className="course-button"
+            className={courseButtonStyle}
             onClick={() => {
               setImportCsvOpen(true);
             }}
           >
             Import from CSV
           </button>
-          <button type="button" className="course-button">
+          <button type="button" className={courseButtonStyle}>
             Options
           </button>
-          <button type="button" className="course-button">
+          <button type="button" className={courseButtonStyle}>
             Help
           </button>
         </div>
