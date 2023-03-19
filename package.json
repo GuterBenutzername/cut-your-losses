@@ -1,12 +1,13 @@
 {
   "name": "cut-your-losses",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write ."
   },
   "postcss": {
     "plugins": {
@@ -14,11 +15,11 @@
     }
   },
   "dependencies": {
-    "@types/classnames": "^2.3.1",
-    "@types/uuid": "^9.0.1",
-    "classnames": "^2.3.2",
+    "@emotion/css": "^11.10.6",
     "immer": "^9.0.19",
+    "papaparse": "^5.4.0",
     "react": "^18.2.0",
+    "react-animated-popup": "^0.1.8",
     "react-dom": "^18.2.0",
     "uuid": "^9.0.0"
   },
@@ -26,8 +27,10 @@
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
     "@playwright/test": "^1.31.2",
+    "@types/papaparse": "^5.3.7",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "@typescript-eslint/parser": "^5.54.1",
     "@vitejs/plugin-react": "latest",
@@ -39,7 +42,6 @@
     "eslint-config-xo-typescript": "^0.56.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-storybook": "^0.6.11",
     "husky": "^8.0.3",
     "jsdom": "latest",
     "postcss": "^8.4.21",

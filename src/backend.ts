@@ -1,20 +1,21 @@
 import { v4 as uuidv4 } from "uuid";
 import { immerable } from "immer";
+import Papa from "papaparse";
 
-function randConVowString(len: number) {
+function randConVowString(length: number) {
   const cons = "bcdfghjklmnpqrstvwxyz".split("");
   const vow = "aeiou".split("");
   let newstr = "";
-  for (let i = 0; i < len / 2; i++)
+  for (let i = 0; i < length / 2; i++)
     newstr += randselect(cons) + randselect(vow);
   return newstr;
 }
 
-function randselect(arr: string[]) {
-  return arr[Math.floor(Math.random() * arr.length)];
+function randselect(array: string[]) {
+  return array[Math.floor(Math.random() * array.length)];
 }
 
-export function isAssignment(argument: unknown): argument is Assignment {
+export function isPartialAssignment(argument: unknown): argument is Assignment {
   return (
     argument !== null &&
     typeof argument === "object" &&
@@ -22,12 +23,28 @@ export function isAssignment(argument: unknown): argument is Assignment {
     "weight" in argument &&
     "grade" in argument &&
     "theoretical" in argument &&
-    "id" in argument &&
     typeof argument.name === "string" &&
     typeof argument.weight === "number" &&
     typeof argument.grade === "number" &&
-    typeof argument.theoretical === "boolean" &&
+    typeof argument.theoretical === "boolean"
+  );
+}
+
+export function isAssignment(argument: unknown): argument is Assignment {
+  return (
+    isPartialAssignment(argument) &&
+    "id" in argument &&
     typeof argument.id === "string"
+  );
+}
+
+export function isPartialAssignmentArray(
+  argument: unknown
+): argument is Assignment[] {
+  return (
+    argument !== null &&
+    Array.isArray(argument) &&
+    argument.every((element) => isPartialAssignment(element))
   );
 }
 
@@ -49,7 +66,7 @@ export function isCourse(argument: unknown): argument is Course {
     typeof argument.name === "string" &&
     isAssignmentArray(argument.assignments) &&
     typeof argument.id === "string"
-  )
+  );
 }
 
 export function isCourseArray(argument: unknown): argument is Course[] {
@@ -57,7 +74,7 @@ export function isCourseArray(argument: unknown): argument is Course[] {
     argument !== null &&
     Array.isArray(argument) &&
     argument.every((element) => isCourse(element))
-  )
+  );
 }
 
 export function fakeAssignment(weights: number[]): Assignment {
@@ -147,19 +164,19 @@ function seperateArrayByWeights(array: Assignment[], weights: number[]) {
 // Get a weighted average of assignments with three different weight amounts
 export function weightedAverage(array: Assignment[], weights: number[]) {
   if (weights.length === 0 || weights.length > 3) {
-    return NaN;
+    return Number.NaN;
   }
 
   if (!array.every((element) => element.grade >= 0)) {
-    return NaN;
+    return Number.NaN;
   }
 
   if (weights.reduce((a, b) => a + b) > 1) {
-    return NaN;
+    return Number.NaN;
   }
 
   if (!weights.every((element) => element >= 0)) {
-    return NaN;
+    return Number.NaN;
   }
 
   // Seperate array to be averaged seperately.
@@ -222,4 +239,24 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
         100
     ) / 100
   );
+}
+
+export function importFromCsv(importCsv: string) {
+  const { data } = Papa.parse(importCsv, {
+    header: true,
+    dynamicTyping: true,
+    skipEmptyLines: true,
+  });
+  if (isPartialAssignmentArray(data)) {
+    data.forEach((assignment) => {
+      assignment.id = uuidv4();
+    });
+    if (isAssignmentArray(data)) {
+      return data;
+    }
+
+    throw new Error("Import failed during ID creation step!");
+  } else {
+    throw new Error("Import failed during parsing step! (invalid data?)");
+  }
 }

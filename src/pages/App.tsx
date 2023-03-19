@@ -1,14 +1,26 @@
 import { useState, useEffect } from "react";
-import { fakeCourse, Course, isCourseArray } from "../backend";
-import CourseTemplate from "./templates/course";
-import Sidebar from "./templates/organisms/sidebar/sidebar";
-import "./app.css";
+import { Course, isCourseArray, Assignment } from "../backend";
+import CourseTemplate from "../organisms/course";
+import Sidebar from "../organisms/sidebar";
 import produce, { applyPatches, type Patch } from "immer";
+import ActionButtons from "../atoms/actionButtons";
+import { css } from "@emotion/css";
+
+function arrayEquals(a: unknown, b: unknown) {
+  return (
+    Array.isArray(a) &&
+    Array.isArray(b) &&
+    a.length === b.length &&
+    a.every((value, index) => value === b[index])
+  );
+}
+
 function App() {
   const [courses, setCourses] = useState<Course[]>(
-    localStorage.getItem("courses") === null || !isCourseArray(JSON.parse(localStorage.getItem("courses")!))
+    localStorage.getItem("courses") === null ||
+      !isCourseArray(JSON.parse(localStorage.getItem("courses")!))
       ? []
-      : JSON.parse(localStorage.getItem("courses")!) as Course[]
+      : (JSON.parse(localStorage.getItem("courses")!) as Course[])
   );
   const [coursePatches, setCoursePatches] = useState<
     Array<{ undo: Patch[]; redo: Patch[] }>
@@ -30,14 +42,45 @@ function App() {
           draft.shift();
           setCurrentVersion(currentVersion - 1);
         }
+
+        if (currentVersion < coursePatches.length - 1) {
+          draft.splice(currentVersion + 2);
+        }
       })
     );
   };
 
-  const onModifyCourse = (nextCourseState: Course, index: number) => {
-    setCourses(
-      produce(courses, (draft) => {
-        draft[index] = nextCourseState;
+  const saveChangesOnModifyAssignment = (
+    patches: Patch[],
+    inversePatches: Patch[]
+  ) => {
+    setCoursePatches(
+      produce(coursePatches, (draft) => {
+        if (
+          arrayEquals(
+            coursePatches[coursePatches.length - 1]?.redo[0].path,
+            patches[0].path
+          )
+        ) {
+          draft[currentVersion] = {
+            undo: draft[currentVersion].undo,
+            redo: patches,
+          };
+        } else {
+          draft[currentVersion + 1] = {
+            undo: inversePatches,
+            redo: patches,
+          };
+          setCurrentVersion(currentVersion + 1);
+          if (draft.length > 100) {
+            draft.shift();
+            setCurrentVersion(currentVersion - 1);
+          }
+        }
+
+        if (currentVersion < coursePatches.length - 1) {
+          draft.splice(currentVersion + 2);
+        }
       })
     );
   };
@@ -47,11 +90,28 @@ function App() {
     setCurrentVersion(currentVersion - 1);
   };
 
+  const onRedo = () => {
+    setCourses(applyPatches(courses, coursePatches[currentVersion + 1].redo));
+    setCurrentVersion(currentVersion + 1);
+  };
+
   const onCreateCourse = (name: string) => {
     const nextState = produce(
       courses,
       (draft) => {
         draft.unshift(new Course(name, []));
+      },
+      saveChanges
+    );
+    setCourses(nextState);
+    setCourseIndex(0);
+  };
+
+  const onImportCourse = (course: Course) => {
+    const nextState = produce(
+      courses,
+      (draft) => {
+        draft.unshift(course);
       },
       saveChanges
     );
@@ -76,6 +136,77 @@ function App() {
 
   const currentCourse =
     courses.length > 0 ? courses[courseIndex] : new Course("", []);
+  const onModifyAssignment = (
+    event: { target: { value: string } },
+    assignmentIndex: number,
+    property: "name" | "grade" | "weight" | "theoretical"
+  ) => {
+    const nextCoursesState = produce(
+      courses,
+      (draft) => {
+        const toChange = draft[courseIndex]?.assignments[assignmentIndex];
+        const newValue = toChange.theoretical; // Ensure no race conditions occur if this property is changed
+        switch (property) {
+          case "name": {
+            toChange.name = event.target.value;
+            break;
+          }
+
+          case "weight": {
+            if (
+              Number(event.target.value) <= 1 &&
+              Number(event.target.value) > 0
+            ) {
+              toChange.weight = Number(event.target.value);
+            }
+
+            break;
+          }
+
+          case "grade": {
+            if (Number(event.target.value) >= 0) {
+              toChange.grade = Number(event.target.value);
+            }
+
+            break;
+          }
+
+          case "theoretical": {
+            toChange.theoretical = !newValue;
+            break;
+          }
+
+          default: {
+            break;
+          }
+        }
+      },
+      saveChangesOnModifyAssignment
+    );
+    setCourses(nextCoursesState);
+  };
+
+  const onDeleteAssignment = (assignmentIndex: number) => {
+    const nextCoursesState = produce(
+      courses,
+      (draft) => {
+        draft[courseIndex]?.assignments.splice(assignmentIndex, 1);
+      },
+      saveChanges
+    );
+    setCourses(nextCoursesState);
+  };
+
+  const onAddAssignment = () => {
+    const nextCoursesState = produce(
+      courses,
+      (draft) => {
+        draft[courseIndex]?.assignments.unshift(new Assignment("", 0, 0));
+      },
+      saveChanges
+    );
+    setCourses(nextCoursesState);
+  };
 
   return (
     <>
@@ -83,17 +214,41 @@ function App() {
         currentCourse={courseIndex}
         courses={courses}
         onSwapCourse={onSwapCourse}
+        onImportCourse={onImportCourse}
         onCreateCourse={onCreateCourse}
       />
-      <div className="app">
-        <CourseTemplate
-          course={currentCourse}
-          courseIndex={courseIndex}
-          onDeleteCourse={onDeleteCourse}
-          onModifyCourse={onModifyCourse}
-          onUndo={onUndo}
-        />
+      <ActionButtons
+        onUndo={onUndo}
+        onRedo={onRedo}
+        onDeleteCourse={() => {
+          onDeleteCourse(courseIndex);
+        }}
+      />
+      <div
+        className={css`
+          display: flex;
+          justify-content: center;
+        `}
+      >
+        {courses.length > 0 && (
+          <CourseTemplate
+            course={currentCourse}
+            onModifyAssignment={onModifyAssignment}
+            onDeleteAssignment={onDeleteAssignment}
+            onAddAssignment={onAddAssignment}
+          />
+        )}
       </div>
+      <span className={css`
+      position: fixed;
+      bottom: 0;
+      width: 100vw;
+      text-align: right;
+      font-size: 0.7rem;
+      color: #ddd;
+      `}>
+      Version 0.2.0 | © 2023 Adam Y. Cole II, founder of The Adam Co.
+      </span>
     </>
   );
 }
