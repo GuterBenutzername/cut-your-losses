@@ -239,6 +239,16 @@ function App() {
           />
         )}
       </div>
+      <span className={css`
+      position: fixed;
+      bottom: 0;
+      width: 100vw;
+      text-align: right;
+      font-size: 0.7rem;
+      color: #ddd;
+      `}>
+      Version 0.2.0 | © 2023 Adam Y. Cole II, founder of The Adam Co.
+      </span>
     </>
   );
 }
