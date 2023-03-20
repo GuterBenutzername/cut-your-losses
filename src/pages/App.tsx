@@ -57,6 +57,8 @@ function App() {
     setCoursePatches(
       produce(coursePatches, (draft) => {
         if (
+          patches[0] !== undefined &&
+          coursePatches[coursePatches.length - 1]?.redo[0] !== undefined &&
           arrayEquals(
             coursePatches[coursePatches.length - 1]?.redo[0].path,
             patches[0].path
@@ -132,6 +134,9 @@ function App() {
       saveChanges
     );
     setCourses(nextState);
+    if (courseIndex > courses.length - 2) {
+      setCourseIndex(0);
+    }
   };
 
   const currentCourse =
