@@ -241,12 +241,7 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
   );
 }
 
-export function importFromCsv(importCsv: string) {
-  const { data } = Papa.parse(importCsv, {
-    header: true,
-    dynamicTyping: true,
-    skipEmptyLines: true,
-  });
+function addIds(data: unknown[]) {
   if (isPartialAssignmentArray(data)) {
     data.forEach((assignment) => {
       assignment.id = uuidv4();
@@ -259,6 +254,16 @@ export function importFromCsv(importCsv: string) {
   } else {
     throw new Error("Import failed during parsing step! (invalid data?)");
   }
+}
+
+export function importFromCsv(importCsv: string) {
+  const { data } = Papa.parse(importCsv, {
+    header: true,
+    dynamicTyping: true,
+    skipEmptyLines: true,
+  });
+  return addIds(data)
+
 }
 
 export function importFromCisdCsv(importCsv: string) {
@@ -319,16 +324,5 @@ export function importFromCisdCsv(importCsv: string) {
         );
     }
   });
-  if (isPartialAssignmentArray(assignments)) {
-    assignments.forEach((assignment) => {
-      assignment.id = uuidv4();
-    });
-    if (isAssignmentArray(assignments)) {
-      return assignments;
-    }
-
-    throw new Error("Import failed during ID creation step!");
-  } else {
-    throw new Error("Import failed during parsing step! (invalid data?)");
-  }
+  return addIds(assignments)
 }
