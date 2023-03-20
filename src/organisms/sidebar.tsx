@@ -1,5 +1,5 @@
 import Popup from "react-animated-popup";
-import { importFromCsv, Course } from "../backend";
+import { importFromCsv, importFromCisdCsv, Course } from "../backend";
 import { useEffect, useState } from "react";
 import { css } from "@emotion/css";
 
@@ -63,9 +63,13 @@ export default function Sidebar({
   const [creating, setCreating] = useState(false);
   const [courseNameText, setCourseNameText] = useState("");
   const [width, setWidth] = useState(0);
+  const [district, setDistrict] = useState("CISD");
   const [importCsvOpen, setImportCsvOpen] = useState(false);
   const [importCsv, setImportCsv] = useState("");
   const [importCsvName, setImportCsvName] = useState("");
+  const [importSchoolOpen, setImportSchoolOpen] = useState(false);
+  const [importSchoolData, setImportSchoolData] = useState("");
+  const [importSchoolName, setImportSchoolName] = useState("");
   useEffect(() => {
     const updateWidth = () => {
       setWidth(window.innerWidth);
@@ -77,6 +81,24 @@ export default function Sidebar({
       window.removeEventListener("resize", updateWidth, true);
     };
   }, [width]);
+  const onImportSchoolCsv = () => {
+    if (importSchoolName.trim() === "") {
+      return;
+    }
+
+    switch (district) {
+      case "CISD":
+        onImportCourse(
+          new Course(importSchoolName, importFromCisdCsv(importSchoolData))
+        );
+        break;
+      default:
+        throw new Error("This errror should not occur or exist");
+    }
+
+    setImportSchoolOpen(false);
+  };
+
   const onImportCsv = () => {
     if (importCsvName.trim() === "") {
       return;
@@ -169,6 +191,90 @@ export default function Sidebar({
             type="button"
             onClick={() => {
               setImportCsvOpen(false);
+            }}
+          >
+            Cancel
+          </button>
+        </span>
+      </Popup>
+      <Popup
+        visible={importSchoolOpen}
+        className={css`
+          text-align: center;
+          width: 70vw;
+          max-width: 600px !important;
+        `}
+        onClose={() => {
+          setImportSchoolOpen(false);
+        }}
+      >
+        <p>
+          <select
+            value={district}
+            onChange={(event) => {
+              setDistrict(event.target.value);
+            }}
+          >
+            <option value="CISD">Conroe Independent School District</option>
+          </select>
+        </p>
+        <br />
+        <textarea
+          className={css`
+            width: 400px;
+            height: 350px;
+          `}
+          value={importSchoolData}
+          onChange={(event) => {
+            setImportSchoolData(event.target.value);
+          }}
+        />
+        <br />
+        <p>Please input the name of the course the data came from here:</p>
+        <span
+          className={css`
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+          `}
+        >
+          <span
+            className={css`
+              position: relative;
+            `}
+          >
+            <label
+              htmlFor="name"
+              className={css`
+                position: absolute;
+                top: -0.8ex;
+                z-index: 1;
+                left: 1rem;
+                background-color: #fff;
+                height: 10px;
+                line-height: 10px;
+                vertical-align: middle;
+                font-size: smaller;
+              `}
+            >
+              Name
+            </label>
+            <input
+              id="name"
+              value={importSchoolName}
+              onChange={(event) => {
+                setImportSchoolName(event.target.value);
+              }}
+            />
+          </span>
+          <button type="button" onClick={onImportSchoolCsv}>
+            Import
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setImportSchoolOpen(false);
             }}
           >
             Cancel
@@ -289,6 +395,15 @@ export default function Sidebar({
             }}
           >
             Import from CSV
+          </button>
+          <button
+            type="button"
+            className={courseButtonStyle}
+            onClick={() => {
+              setImportSchoolOpen(true);
+            }}
+          >
+            Import gradebook
           </button>
           <button type="button" className={courseButtonStyle}>
             Options

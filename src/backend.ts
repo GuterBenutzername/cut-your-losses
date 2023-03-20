@@ -260,3 +260,75 @@ export function importFromCsv(importCsv: string) {
     throw new Error("Import failed during parsing step! (invalid data?)");
   }
 }
+
+export function importFromCisdCsv(importCsv: string) {
+  const { data } = Papa.parse(importCsv, {
+    header: false,
+    dynamicTyping: true,
+    skipEmptyLines: true,
+  });
+  data.forEach((item: unknown) => {
+    if (Array.isArray(data) && data.every((row) => Array.isArray(row))) {
+      const assignment = item as unknown[];
+      assignment.splice(0, 2);
+      assignment.splice(-5);
+      if (
+        typeof assignment[0] !== "string" ||
+        !(
+          typeof assignment[2] === "number" || typeof assignment[2] === "string"
+        ) ||
+        typeof assignment[1] !== "string"
+      ) {
+        throw new Error(
+          "Import failed during conversion step! (invalid data?)"
+        );
+      }
+    } else {
+      throw new Error("Import failed during parsing step! (invalid data?)");
+    }
+  });
+  const assignments = data
+    .map((x) => ({
+      name: (x as Array<string | number>)[0],
+      grade: (x as Array<string | number>)[2],
+      weight: (x as Array<string | number>)[1],
+      theoretical: false,
+    }))
+    .filter((item) => item.grade === "Z" || item.grade === "-"||typeof item.grade === "number");
+  assignments.forEach((assignment) => {
+    if (assignment.grade === "Z") {
+      assignment.grade = 0;
+    } else if (assignment.grade === "-") {
+      assignment.grade = 0;
+      assignment.theoretical = true;
+    }
+
+    switch (assignment.weight) {
+      case "Major":
+        assignment.weight = 0.6;
+        break;
+      case "Quiz":
+        assignment.weight = 0.25;
+        break;
+      case "Daily":
+        assignment.weight = 0.15;
+        break;
+      default:
+        throw new Error(
+          "Import failed during conversion step (invalid weight value)!"
+        );
+    }
+  });
+  if (isPartialAssignmentArray(assignments)) {
+    assignments.forEach((assignment) => {
+      assignment.id = uuidv4();
+    });
+    if (isAssignmentArray(assignments)) {
+      return assignments;
+    }
+
+    throw new Error("Import failed during ID creation step!");
+  } else {
+    throw new Error("Import failed during parsing step! (invalid data?)");
+  }
+}
