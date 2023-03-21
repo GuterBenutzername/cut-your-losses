@@ -199,7 +199,8 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
   const bc = solveForTwoWeights(weights[1], weights[2]);
   const ac = solveForTwoWeights(weights[0], weights[2]);
   const ba = solveForTwoWeights(weights[1], weights[0]);
-  const placeholderText = "Placeholder; see settings";
+  const placeholderText =
+    "If you can see this, something has gone horribly wrong.";
   if (a.length === 0) {
     a = [
       new Assignment(
@@ -262,8 +263,7 @@ export function importFromCsv(importCsv: string) {
     dynamicTyping: true,
     skipEmptyLines: true,
   });
-  return addIds(data)
-
+  return addIds(data);
 }
 
 export function importFromCisdCsv(importCsv: string) {
@@ -272,8 +272,8 @@ export function importFromCisdCsv(importCsv: string) {
     dynamicTyping: true,
     skipEmptyLines: true,
   });
-  data.forEach((item: unknown) => {
-    if (Array.isArray(data) && data.every((row) => Array.isArray(row))) {
+  if (Array.isArray(data) && data.every((row) => Array.isArray(row))) {
+    data.forEach((item: unknown) => {
       const assignment = item as unknown[];
       assignment.splice(0, 2);
       assignment.splice(-5);
@@ -285,44 +285,49 @@ export function importFromCisdCsv(importCsv: string) {
         typeof assignment[1] !== "string"
       ) {
         throw new Error(
-          "Import failed during conversion step! (invalid data?)"
+          "Import failed during type check step! (invalid data?)"
         );
       }
-    } else {
-      throw new Error("Import failed during parsing step! (invalid data?)");
-    }
-  });
-  const assignments = data
-    .map((x) => ({
-      name: (x as Array<string | number>)[0],
-      grade: (x as Array<string | number>)[2],
-      weight: (x as Array<string | number>)[1],
-      theoretical: false,
-    }))
-    .filter((item) => item.grade === "Z" || item.grade === "-"||typeof item.grade === "number");
-  assignments.forEach((assignment) => {
-    if (assignment.grade === "Z") {
-      assignment.grade = 0;
-    } else if (assignment.grade === "-") {
-      assignment.grade = 0;
-      assignment.theoretical = true;
-    }
+    });
+    const assignments = data
+      .map((x) => ({
+        name: (x as Array<string | number>)[0],
+        grade: (x as Array<string | number>)[2],
+        weight: (x as Array<string | number>)[1],
+        theoretical: false,
+      }))
+      .filter(
+        (item) =>
+          item.grade === "Z" ||
+          item.grade === "-" ||
+          typeof item.grade === "number"
+      );
+    assignments.forEach((assignment) => {
+      if (assignment.grade === "Z") {
+        assignment.grade = 0;
+      } else if (assignment.grade === "-") {
+        assignment.grade = 0;
+        assignment.theoretical = true;
+      }
 
-    switch (assignment.weight) {
-      case "Major":
-        assignment.weight = 0.6;
-        break;
-      case "Quiz":
-        assignment.weight = 0.25;
-        break;
-      case "Daily":
-        assignment.weight = 0.15;
-        break;
-      default:
-        throw new Error(
-          "Import failed during conversion step (invalid weight value)!"
-        );
-    }
-  });
-  return addIds(assignments)
+      switch (assignment.weight) {
+        case "Major":
+          assignment.weight = 0.6;
+          break;
+        case "Quiz":
+          assignment.weight = 0.25;
+          break;
+        case "Daily":
+          assignment.weight = 0.15;
+          break;
+        default:
+          throw new Error(
+            "Import failed during conversion step (invalid weight value)!"
+          );
+      }
+    });
+    return addIds(assignments);
+  }
+
+  throw new Error("Import failed during parsing step! (invalid data?)");
 }
