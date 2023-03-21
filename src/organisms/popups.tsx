@@ -21,10 +21,10 @@ export function Popups({
     <>
       <div
         className={css`
-        position:fixed;
-        right: 50%;
-        top: 50%;
-        z-index: 100;
+          position: fixed;
+          right: 50%;
+          top: 50%;
+          z-index: 100;
         `}
       >
         <Popup
@@ -211,28 +211,28 @@ export function Popups({
         </Popup>
       </div>
       <button
-          type="button"
-          className={courseButtonStyle}
-          onClick={() => {
-            setImportCsvOpen(true);
-          }}
-        >
-          Import from CSV
-        </button>
-        <button
-          type="button"
-          className={courseButtonStyle}
-          onClick={() => {
-            setImportSchoolOpen(true);
-          }}
-        >
-          Import gradebook
-        </button>
-        <div
-          className={css`
-            flex: 1 0 0px;
-          `}
-        />
+        type="button"
+        className={courseButtonStyle}
+        onClick={() => {
+          setImportCsvOpen(true);
+        }}
+      >
+        Import from CSV
+      </button>
+      <button
+        type="button"
+        className={courseButtonStyle}
+        onClick={() => {
+          setImportSchoolOpen(true);
+        }}
+      >
+        Import gradebook
+      </button>
+      <div
+        className={css`
+          flex: 1 0 0px;
+        `}
+      />
       <button type="button" className={courseButtonStyle}>
         Options
       </button>

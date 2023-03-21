@@ -1,8 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useLayoutEffect,
-} from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 
 import { css, cx } from "@emotion/css";
 
