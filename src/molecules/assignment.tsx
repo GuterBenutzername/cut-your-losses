@@ -2,11 +2,27 @@ import { type Assignment } from "../backend";
 import { css, cx } from "@emotion/css";
 
 const assignmentInputStyle = css`
-  width: 50%;
+  width: 100%;
   border-top: 0;
   border-bottom: 0;
 `;
 
+const assignmentWrapperStyle = css`
+  position: relative;
+  flex: 1 0 0px;
+`;
+
+const labelStyle = css`
+  position: absolute;
+  top: -0.8ex;
+  z-index: 1;
+  left: 0.6em;
+  background-color: #fff;
+  height: 10px;
+  line-height: 10px;
+  vertical-align: middle;
+  font-size: smaller;
+`;
 function AssignmentCard({
   assignment,
   index,
@@ -62,45 +78,72 @@ function AssignmentCard({
       >
         X
       </button>
-      <input
-        autoFocus={autoFocus}
-        aria-label="name"
-        value={assignment.name}
-        className={assignmentInputStyle}
-        onChange={(event) => {
-          onModifyAssignment(event, index, "name");
-        }}
-      />
-      <input
-        type="number"
-        aria-label="grade"
-        step="1"
-        className={assignmentInputStyle}
-        value={assignment.grade.toString()}
-        onChange={(event) => {
-          onModifyAssignment(event, index, "grade");
-        }}
-      />
-      <input
-        type="number"
-        step="0.01"
+      <span className={assignmentWrapperStyle}>
+        <input
+          autoFocus={autoFocus}
+          id={`assignment-name-${index}`}
+          aria-label="name"
+          value={assignment.name}
+          className={assignmentInputStyle}
+          onChange={(event) => {
+            onModifyAssignment(event, index, "name");
+          }}
+        />
+        {index === 0 && (
+          <label htmlFor="assignment-name-0" className={labelStyle}>
+            Name
+          </label>
+        )}
+      </span>
+      <span className={assignmentWrapperStyle}>
+        <input
+          type="number"
+          aria-label="grade"
+          step="1"
+          id={`assignment-grade-${index}`}
+          className={assignmentInputStyle}
+          value={assignment.grade.toString()}
+          onChange={(event) => {
+            onModifyAssignment(event, index, "grade");
+          }}
+        />
+        {index === 0 && (
+          <label htmlFor="assignment-grade-0" className={labelStyle}>
+            Grade
+          </label>
+        )}
+      </span>
+      <span className={assignmentWrapperStyle}>
+        <input
+          type="number"
+          step="0.01"
+          className={cx(
+            assignmentInputStyle,
+            css`
+              border-right: 2px solid #000;
+            `
+          )}
+          aria-label="weight"
+          id={`assignment-weight-${index}`}
+          value={assignment.weight.toString()}
+          onChange={(event) => {
+            onModifyAssignment(event, index, "weight");
+          }}
+        />
+        {index === 0 && (
+          <label htmlFor="assignment-weight-0" className={labelStyle}>
+            Weight
+          </label>
+        )}
+      </span>
+      <span
         className={cx(
-          assignmentInputStyle,
+          assignmentWrapperStyle,
           css`
-            border-right: 2px solid #000;
+            width: 50%;
+            text-align: center;
           `
         )}
-        aria-label="weight"
-        value={assignment.weight.toString()}
-        onChange={(event) => {
-          onModifyAssignment(event, index, "weight");
-        }}
-      />
-      <span
-        className={css`
-          width: 50%;
-          text-align: center;
-        `}
       >
         <input
           type="checkbox"
@@ -113,11 +156,25 @@ function AssignmentCard({
             `
           )}
           aria-label="theoretical"
+          id={`assignment-theoretical-${index}`}
           checked={assignment.theoretical}
           onChange={(event) => {
             onModifyAssignment(event, index, "theoretical");
           }}
         />
+        {index === 0 && (
+          <label
+            htmlFor="assignment-theoretical-0"
+            className={cx(
+              labelStyle,
+              css`
+                top: -1.4ex;
+              `
+            )}
+          >
+            Theoretical?
+          </label>
+        )}
       </span>
     </div>
   );
