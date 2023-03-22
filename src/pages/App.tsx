@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import produce, { applyPatches, type Patch } from "immer";
+import { css } from "@emotion/css";
+
 import { Course, isCourseArray, Assignment } from "../backend";
 import CourseTemplate from "../organisms/course";
 import Sidebar from "../organisms/sidebar";
-import produce, { applyPatches, type Patch } from "immer";
 import ActionButtons from "../atoms/actionButtons";
-import { css } from "@emotion/css";
 
 function arrayEquals(a: unknown, b: unknown) {
   return (
@@ -23,20 +24,20 @@ function App() {
       : (JSON.parse(localStorage.getItem("courses")!) as Course[])
   );
   const [coursePatches, setCoursePatches] = useState<
-    Array<{ undo: Patch[]; redo: Patch[] }>
+    { undo: Patch[]; redo: Patch[] }[]
   >([]);
   const [currentVersion, setCurrentVersion] = useState<number>(-1);
   const [courseIndex, setCourseIndex] = useState<number>(0);
   useEffect(() => {
     localStorage.setItem("courses", JSON.stringify(courses));
   }, [courses]);
-  const saveChanges = (patches: Patch[], inversePatches: Patch[]) => {
+  const saveChanges = (redo: Patch[], undo: Patch[]) => {
     setCurrentVersion(currentVersion + 1);
     setCoursePatches(
       produce(coursePatches, (draft) => {
         draft[currentVersion + 1] = {
-          undo: inversePatches,
-          redo: patches,
+          undo,
+          redo,
         };
         if (draft.length > 100) {
           draft.shift();
@@ -50,19 +51,13 @@ function App() {
     );
   };
 
-  const saveChangesOnModifyAssignment = (
-    patches: Patch[],
-    inversePatches: Patch[]
-  ) => {
+  const saveChangesOnModifyAssignment = (patches: Patch[], undo: Patch[]) => {
     setCoursePatches(
       produce(coursePatches, (draft) => {
         if (
           patches[0] !== undefined &&
-          coursePatches[coursePatches.length - 1]?.redo[0] !== undefined &&
-          arrayEquals(
-            coursePatches[coursePatches.length - 1]?.redo[0].path,
-            patches[0].path
-          )
+          coursePatches.at(-1)?.redo[0] !== undefined &&
+          arrayEquals(coursePatches.at(-1)?.redo[0].path, patches[0].path)
         ) {
           draft[currentVersion] = {
             undo: draft[currentVersion].undo,
@@ -70,7 +65,7 @@ function App() {
           };
         } else {
           draft[currentVersion + 1] = {
-            undo: inversePatches,
+            undo,
             redo: patches,
           };
           setCurrentVersion(currentVersion + 1);
@@ -144,7 +139,7 @@ function App() {
   const onModifyAssignment = (
     event: { target: { value: string } },
     assignmentIndex: number,
-    property: "name" | "grade" | "weight" | "future"
+    property: "future" | "grade" | "name" | "weight"
   ) => {
     const nextCoursesState = produce(
       courses,
@@ -152,38 +147,31 @@ function App() {
         const toChange = draft[courseIndex]?.assignments[assignmentIndex];
         const newValue = toChange.future; // Ensure no race conditions occur if this property is changed
         switch (property) {
-          case "name": {
+          case "name":
             toChange.name = event.target.value;
             break;
-          }
 
-          case "weight": {
-            if (
-              Number(event.target.value) <= 1 &&
-              Number(event.target.value) >= 0
-            ) {
+          case "weight":
+            if (Number(event.target.value) <= 1 &&
+            Number(event.target.value) >= 0) {
               toChange.weight = Number(event.target.value);
             }
 
             break;
-          }
 
-          case "grade": {
+          case "grade":
             if (Number(event.target.value) >= 0) {
               toChange.grade = Number(event.target.value);
             }
 
             break;
-          }
 
-          case "future": {
+          case "future":
             toChange.future = !newValue;
             break;
-          }
 
-          default: {
+          default:
             break;
-          }
         }
       },
       saveChangesOnModifyAssignment
@@ -216,18 +204,18 @@ function App() {
   return (
     <>
       <Sidebar
-        currentCourse={courseIndex}
         courses={courses}
-        onSwapCourse={onSwapCourse}
-        onImportCourse={onImportCourse}
+        currentCourse={courseIndex}
         onCreateCourse={onCreateCourse}
+        onImportCourse={onImportCourse}
+        onSwapCourse={onSwapCourse}
       />
       <ActionButtons
-        onUndo={onUndo}
-        onRedo={onRedo}
         onDeleteCourse={() => {
           onDeleteCourse(courseIndex);
         }}
+        onRedo={onRedo}
+        onUndo={onUndo}
       />
       <div
         className={css`
@@ -238,9 +226,9 @@ function App() {
         {courses.length > 0 && (
           <CourseTemplate
             course={currentCourse}
-            onModifyAssignment={onModifyAssignment}
-            onDeleteAssignment={onDeleteAssignment}
             onAddAssignment={onAddAssignment}
+            onDeleteAssignment={onDeleteAssignment}
+            onModifyAssignment={onModifyAssignment}
           />
         )}
       </div>
@@ -262,3 +250,4 @@ function App() {
 }
 
 export default App;
+

@@ -6,8 +6,9 @@ function randConVowString(length: number) {
   const cons = "bcdfghjklmnpqrstvwxyz".split("");
   const vow = "aeiou".split("");
   let newstr = "";
-  for (let i = 0; i < length / 2; i++)
+  for (let index = 0; index < length / 2; index++) {
     newstr += randselect(cons) + randselect(vow);
+  }
   return newstr;
 }
 
@@ -109,8 +110,11 @@ export function fakeCourse(assignmentsLength: number) {
 // Create a class to hold assignment data in a more efficient manner.
 export class Assignment {
   [immerable] = true;
+
   public future;
+
   public id: string;
+
   constructor(
     public name: string,
     public grade: number,
@@ -127,7 +131,9 @@ export class Assignment {
 
 export class Course {
   [immerable] = true;
+
   public id: string;
+
   constructor(public name: string, public assignments: Assignment[]) {
     this.id = uuidv4();
     this.name = name;
@@ -181,6 +187,7 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
 
   // Seperate array to be averaged seperately.
   let [a, b, c] = seperateArrayByWeights(array, weights);
+
   // If all assignments have the same weight, return the average of the array.
   if (b.length + c.length === 0) {
     return gradeArrayAvg(a);
@@ -233,12 +240,12 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
 
   return (
     // Finally, return a weighted average.
-    Math.round(
+    (Math.round(
       (gradeArrayAvg(a) * weights[0] +
         gradeArrayAvg(b) * weights[1] +
         gradeArrayAvg(c) * weights[2]) *
         100
-    ) / 100
+    ) / 100)
   );
 }
 
@@ -284,16 +291,16 @@ export function importFromCisdCsv(importCsv: string) {
         ) ||
         typeof assignment[1] !== "string"
       ) {
-        throw new Error(
+        throw new TypeError(
           "Import failed during type check step! (invalid data?)"
         );
       }
     });
     const assignments = data
       .map((x) => ({
-        name: (x as Array<string | number>)[0],
-        grade: (x as Array<string | number>)[2],
-        weight: (x as Array<string | number>)[1],
+        name: (x as number[] | string[])[0],
+        grade: (x as number[] | string[])[2],
+        weight: (x as number[] | string[])[1],
         future: false,
       }))
       .filter(
@@ -331,3 +338,4 @@ export function importFromCisdCsv(importCsv: string) {
 
   throw new Error("Import failed during parsing step! (invalid data?)");
 }
+

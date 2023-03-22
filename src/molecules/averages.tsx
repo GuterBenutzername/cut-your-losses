@@ -1,5 +1,6 @@
-import { weightedAverage, type Assignment } from "../backend";
 import { css, cx } from "@emotion/css";
+
+import { weightedAverage, type Assignment } from "../backend";
 
 const averageStyle = css`
   font-weight: 700;
@@ -23,7 +24,7 @@ export default function Averages({
 }: {
   assignments: Assignment[];
 }) {
-  let weights = [...new Set(assignments.map((item) => item.weight))];
+  let weights = Array.from(new Set(assignments.map((item) => item.weight)));
   if (weights.length > 3) {
     weights = weights.slice(0, 3);
   }
@@ -36,14 +37,14 @@ export default function Averages({
     assignments.filter((assignment) => !assignment.future),
     weights
   );
-  realAverage = Number.isNaN(realAverage) ? 0 : realAverage;
+  if (Number.isNaN(realAverage)) {
+    realAverage = 0;
+  }
   let futureAverage = weightedAverage(assignments, weights);
-  futureAverage = Number.isNaN(futureAverage)
-    ? 0
-    : futureAverage;
-  const showfutureAverage = assignments.some(
-    (assignment) => assignment.future
-  );
+  if (Number.isNaN(futureAverage)) {
+    futureAverage = 0;
+  }
+  const showfutureAverage = assignments.some((assignment) => assignment.future);
 
   const theoryAverageClass = cx(futureAverageStyle, {
     [failing]: futureAverage < 70 && futureAverage > 0,
@@ -74,7 +75,9 @@ export default function Averages({
     [css`
       color: #0b0;
     `]: realAverage < futureAverage,
+
     [failing]: realAverage > futureAverage,
+
     [css`
       color: #000;
       margin-right: 0;
@@ -93,7 +96,7 @@ export default function Averages({
   } else if (futureAverage - realAverage === 0) {
     changeElement = `=${change}`;
   } else {
-    changeElement = `${change}`;
+    changeElement = String(change);
   }
 
   return (
@@ -121,7 +124,7 @@ export default function Averages({
           })}
         </span>
       </span>
-      {showfutureAverage && (
+      {Boolean(showfutureAverage) && (
         <span>
           Including future Assignments: <br />
           <span className={theoryAverageClass}>
@@ -147,3 +150,4 @@ export default function Averages({
     </div>
   );
 }
+

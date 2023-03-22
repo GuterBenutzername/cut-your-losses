@@ -1,7 +1,9 @@
-import { type Course } from "../backend";
-import Assignments from "./assignments";
-import Averages from "../molecules/averages";
 import { css } from "@emotion/css";
+
+import type { Course } from "../backend";
+import Averages from "../molecules/averages";
+
+import Assignments from "./assignments";
 
 const primaryViewStyle = css`
   width: calc(100vw - 150px);
@@ -37,7 +39,7 @@ export default function CourseTemplate({
   onModifyAssignment: (
     event: { target: { value: string } },
     index: number,
-    property: "name" | "grade" | "weight" | "future"
+    property: "future" | "grade" | "name" | "weight"
   ) => void;
   onDeleteAssignment: (index: number) => void;
   onAddAssignment: () => void;
@@ -48,9 +50,9 @@ export default function CourseTemplate({
         <Averages assignments={course.assignments} />
         <Assignments
           assignments={course.assignments}
-          onModifyAssignment={onModifyAssignment}
-          onDeleteAssignment={onDeleteAssignment}
           onAddAssignment={onAddAssignment}
+          onDeleteAssignment={onDeleteAssignment}
+          onModifyAssignment={onModifyAssignment}
         />
       </div>
     </div>

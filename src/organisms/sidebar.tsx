@@ -1,6 +1,8 @@
-import { importFromCsv, importFromCisdCsv, Course } from "../backend";
 import { useEffect, useState } from "react";
 import { css } from "@emotion/css";
+
+import { importFromCsv, importFromCisdCsv, Course } from "../backend";
+
 import { Popups } from "./popups";
 
 export const courseButtonStyle = css`
@@ -84,13 +86,15 @@ export default function Sidebar({
     }
 
     switch (district) {
-      case "CISD":
+      case "CISD": {
         onImportCourse(
           new Course(importSchoolName, importFromCisdCsv(importSchoolData))
         );
         break;
-      default:
+      }
+      default: {
         throw new Error("This errror should not occur or exist");
+      }
     }
   };
 
@@ -132,13 +136,13 @@ export default function Sidebar({
         >
           {courses.map((course, index) => (
             <button
-              key={course.id}
               className={courseButtonStyle}
-              type="button"
+              key={course.id}
               onClick={(event) => {
                 event.currentTarget.blur();
                 onSwapCourse(index);
               }}
+              type="button"
             >
               {currentCourse === index && (
                 <span
@@ -183,9 +187,8 @@ export default function Sidebar({
               </label>
               <input
                 autoFocus
-                id="course-input"
-                value={courseNameText}
                 className={newCourseInputStyle}
+                id="course-input"
                 onChange={(event) => {
                   setCourseNameText(event.target.value);
                 }}
@@ -200,15 +203,16 @@ export default function Sidebar({
                     setCreating(false);
                   }
                 }}
+                value={courseNameText}
               />
             </span>
           ) : (
             <button
               className={courseButtonStyle}
-              type="button"
               onClick={() => {
                 setCreating(true);
               }}
+              type="button"
             >
               New Course
             </button>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
-
 import { css, cx } from "@emotion/css";
 
 const containerStyle = css`
@@ -30,8 +29,13 @@ export default function Popup({
   const [displayNothing, setDisplayNothing] = useState(!visible);
 
   useLayoutEffect(() => {
-    if (firstTimeSetup) return;
-    if (displayNothing) return;
+    if (firstTimeSetup) {
+      return;
+    }
+    if (displayNothing) {
+      return;
+    }
+
     // Fix to make sure the element has been rendered before we start the animation otherwise react might execute before doing a re-render
     window.setTimeout(() => {
       setAnimationState(true);
@@ -40,7 +44,9 @@ export default function Popup({
 
   useEffect(() => {
     setFirstTimeSetup(false);
-    if (firstTimeSetup) return;
+    if (firstTimeSetup) {
+      return;
+    }
 
     if (visible) {
       setDisplayNothing(false);
@@ -52,7 +58,9 @@ export default function Popup({
     }
   }, [visible, firstTimeSetup, displayNothing]);
 
-  if (displayNothing) return null;
+  if (displayNothing) {
+    return null;
+  }
   const promptStyle = css`
     padding: 40px;
     background-color: #fff;

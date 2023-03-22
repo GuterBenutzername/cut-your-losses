@@ -1,5 +1,6 @@
-import { type Assignment } from "../backend";
 import { css, cx } from "@emotion/css";
+
+import type { Assignment } from "../backend";
 
 const assignmentInputStyle = css`
   width: 100%;
@@ -35,7 +36,7 @@ function AssignmentCard({
   onModifyAssignment: (
     event: { target: { value: string } },
     index: number,
-    property: "name" | "grade" | "weight" | "future"
+    property: "future" | "grade" | "name" | "weight"
   ) => void;
   onDeleteAssignment: (index: number) => void;
   autoFocus: boolean;
@@ -66,7 +67,6 @@ function AssignmentCard({
       `}
     >
       <button
-        type="button"
         aria-label="delete"
         className={css`
           border-top: 0;
@@ -75,63 +75,64 @@ function AssignmentCard({
         onClick={() => {
           onDeleteAssignment(index);
         }}
+        type="button"
       >
         X
       </button>
       <span className={assignmentWrapperStyle}>
         <input
-          autoFocus={autoFocus}
-          id={`assignment-name-${index}`}
           aria-label="name"
-          value={assignment.name}
+          autoFocus={autoFocus}
           className={assignmentInputStyle}
+          id={`assignment-name-${index}`}
           onChange={(event) => {
             onModifyAssignment(event, index, "name");
           }}
+          value={assignment.name}
         />
         {index === 0 && (
-          <label htmlFor="assignment-name-0" className={labelStyle}>
+          <label className={labelStyle} htmlFor="assignment-name-0">
             Name
           </label>
         )}
       </span>
       <span className={assignmentWrapperStyle}>
         <input
-          type="number"
           aria-label="grade"
-          step="1"
-          id={`assignment-grade-${index}`}
           className={assignmentInputStyle}
-          value={assignment.grade.toString()}
+          id={`assignment-grade-${index}`}
           onChange={(event) => {
             onModifyAssignment(event, index, "grade");
           }}
+          step="1"
+          type="number"
+          value={assignment.grade.toString()}
         />
         {index === 0 && (
-          <label htmlFor="assignment-grade-0" className={labelStyle}>
+          <label className={labelStyle} htmlFor="assignment-grade-0">
             Grade
           </label>
         )}
       </span>
       <span className={assignmentWrapperStyle}>
         <input
-          type="number"
-          step="0.01"
+          aria-label="weight"
           className={cx(
             assignmentInputStyle,
             css`
               border-right: 2px solid #000;
             `
           )}
-          aria-label="weight"
           id={`assignment-weight-${index}`}
-          value={assignment.weight.toString()}
           onChange={(event) => {
             onModifyAssignment(event, index, "weight");
           }}
+          step="0.01"
+          type="number"
+          value={assignment.weight.toString()}
         />
         {index === 0 && (
-          <label htmlFor="assignment-weight-0" className={labelStyle}>
+          <label className={labelStyle} htmlFor="assignment-weight-0">
             Weight
           </label>
         )}
@@ -146,7 +147,8 @@ function AssignmentCard({
         )}
       >
         <input
-          type="checkbox"
+          aria-label="future"
+          checked={assignment.future}
           className={cx(
             assignmentInputStyle,
             css`
@@ -155,22 +157,21 @@ function AssignmentCard({
               width: 100%;
             `
           )}
-          aria-label="future"
           id={`assignment-future-${index}`}
-          checked={assignment.future}
           onChange={(event) => {
             onModifyAssignment(event, index, "future");
           }}
+          type="checkbox"
         />
         {index === 0 && (
           <label
-            htmlFor="assignment-future-0"
             className={cx(
               labelStyle,
               css`
                 top: -1.4ex;
               `
             )}
+            htmlFor="assignment-future-0"
           >
             Future?
           </label>

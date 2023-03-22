@@ -1,6 +1,8 @@
 import { css } from "@emotion/css";
 import { useState } from "react";
+
 import Popup from "../atoms/popup";
+
 import { courseButtonStyle } from "./sidebar";
 
 export function Popups({
@@ -28,7 +30,6 @@ export function Popups({
         `}
       >
         <Popup
-          visible={importCsvOpen}
           className={css`
             text-align: center;
             width: 70vw;
@@ -37,6 +38,7 @@ export function Popups({
           onClose={() => {
             setImportCsvOpen(false);
           }}
+          visible={importCsvOpen}
         >
           <p>
             Manually import from CSV (aka copy-paste from Excel) <br />
@@ -51,10 +53,10 @@ export function Popups({
               width: 400px;
               height: 350px;
             `}
-            value={importCsv}
             onChange={(event) => {
               setImportCsv(event.target.value);
             }}
+            value={importCsv}
           />
           <br />
           <p>
@@ -75,7 +77,6 @@ export function Popups({
               `}
             >
               <label
-                htmlFor="name"
                 className={css`
                   position: absolute;
                   top: -0.8ex;
@@ -87,39 +88,39 @@ export function Popups({
                   vertical-align: middle;
                   font-size: smaller;
                 `}
+                htmlFor="name"
               >
                 Name
               </label>
               <input
                 id="name"
-                value={importCsvName}
                 onChange={(event) => {
                   setImportCsvName(event.target.value);
                 }}
+                value={importCsvName}
               />
             </span>
             <button
-              type="button"
               onClick={() => {
                 onImportCsv(importCsv, importCsvName);
                 setImportCsvOpen(false);
                 setImportCsv("");
               }}
+              type="button"
             >
               Import
             </button>
             <button
-              type="button"
               onClick={() => {
                 setImportCsvOpen(false);
               }}
+              type="button"
             >
               Cancel
             </button>
           </span>
         </Popup>
         <Popup
-          visible={importSchoolOpen}
           className={css`
             text-align: center;
             width: 70vw;
@@ -128,13 +129,14 @@ export function Popups({
           onClose={() => {
             setImportSchoolOpen(false);
           }}
+          visible={importSchoolOpen}
         >
           <p>
             <select
-              value={district}
               onChange={(event) => {
                 setDistrict(event.target.value);
               }}
+              value={district}
             >
               <option value="CISD">Conroe Independent School District</option>
             </select>
@@ -145,10 +147,10 @@ export function Popups({
               width: 400px;
               height: 350px;
             `}
-            value={importSchoolData}
             onChange={(event) => {
               setImportSchoolData(event.target.value);
             }}
+            value={importSchoolData}
           />
           <br />
           <p>Please input the name of the course the data came from here:</p>
@@ -166,7 +168,6 @@ export function Popups({
               `}
             >
               <label
-                htmlFor="name"
                 className={css`
                   position: absolute;
                   top: -0.8ex;
@@ -178,32 +179,33 @@ export function Popups({
                   vertical-align: middle;
                   font-size: smaller;
                 `}
+                htmlFor="name"
               >
                 Name
               </label>
               <input
                 id="name"
-                value={importSchoolName}
                 onChange={(event) => {
                   setImportSchoolName(event.target.value);
                 }}
+                value={importSchoolName}
               />
             </span>
             <button
-              type="button"
               onClick={() => {
                 onImportSchoolCsv(district, importSchoolData, importSchoolName);
                 setImportSchoolOpen(false);
                 setImportSchoolData("");
               }}
+              type="button"
             >
               Import
             </button>
             <button
-              type="button"
               onClick={() => {
                 setImportSchoolOpen(false);
               }}
+              type="button"
             >
               Cancel
             </button>
@@ -211,20 +213,20 @@ export function Popups({
         </Popup>
       </div>
       <button
-        type="button"
         className={courseButtonStyle}
         onClick={() => {
           setImportCsvOpen(true);
         }}
+        type="button"
       >
         Import from CSV
       </button>
       <button
-        type="button"
         className={courseButtonStyle}
         onClick={() => {
           setImportSchoolOpen(true);
         }}
+        type="button"
       >
         Import gradebook
       </button>
@@ -233,10 +235,10 @@ export function Popups({
           flex: 1 0 0px;
         `}
       />
-      <button type="button" className={courseButtonStyle}>
+      <button className={courseButtonStyle} type="button">
         Options
       </button>
-      <button type="button" className={courseButtonStyle}>
+      <button className={courseButtonStyle} type="button">
         Help
       </button>
     </>
