@@ -160,7 +160,7 @@ function App() {
           case "weight": {
             if (
               Number(event.target.value) <= 1 &&
-              Number(event.target.value) > 0
+              Number(event.target.value) >= 0
             ) {
               toChange.weight = Number(event.target.value);
             }
