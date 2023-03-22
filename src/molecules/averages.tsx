@@ -6,7 +6,7 @@ const averageStyle = css`
   font-size: x-large;
 `;
 
-const theoreticalAverageStyle = css`
+const futureAverageStyle = css`
   font-weight: 700;
   font-size: x-large;
   display: flex;
@@ -33,37 +33,37 @@ export default function Averages({
   }
 
   let realAverage = weightedAverage(
-    assignments.filter((assignment) => !assignment.theoretical),
+    assignments.filter((assignment) => !assignment.future),
     weights
   );
   realAverage = Number.isNaN(realAverage) ? 0 : realAverage;
-  let theoreticalAverage = weightedAverage(assignments, weights);
-  theoreticalAverage = Number.isNaN(theoreticalAverage)
+  let futureAverage = weightedAverage(assignments, weights);
+  futureAverage = Number.isNaN(futureAverage)
     ? 0
-    : theoreticalAverage;
-  const showTheoreticalAverage = assignments.some(
-    (assignment) => assignment.theoretical
+    : futureAverage;
+  const showfutureAverage = assignments.some(
+    (assignment) => assignment.future
   );
 
-  const theoryAverageClass = cx(theoreticalAverageStyle, {
-    [failing]: theoreticalAverage < 70 && theoreticalAverage > 0,
+  const theoryAverageClass = cx(futureAverageStyle, {
+    [failing]: futureAverage < 70 && futureAverage > 0,
   });
   const realAverageClass = cx(averageStyle, {
-    theory: showTheoreticalAverage,
+    theory: showfutureAverage,
     [failing]: realAverage < 70 && realAverage > 0,
   });
   let arrow;
 
-  if (realAverage > theoreticalAverage) {
+  if (realAverage > futureAverage) {
     arrow =
-      realAverage < theoreticalAverage ? (
+      realAverage < futureAverage ? (
         <span className="material-symbols-outlined">north</span>
       ) : (
         <span className="material-symbols-outlined">south</span>
       );
   } else {
     arrow =
-      realAverage < theoreticalAverage ? (
+      realAverage < futureAverage ? (
         <span className="material-symbols-outlined">north</span>
       ) : (
         <span className="material-symbols-outlined">east</span>
@@ -73,24 +73,24 @@ export default function Averages({
   const arrowClass = cx("arrow", {
     [css`
       color: #0b0;
-    `]: realAverage < theoreticalAverage,
-    [failing]: realAverage > theoreticalAverage,
+    `]: realAverage < futureAverage,
+    [failing]: realAverage > futureAverage,
     [css`
       color: #000;
       margin-right: 0;
-    `]: realAverage === theoreticalAverage,
+    `]: realAverage === futureAverage,
   });
   const change = (
-    Math.round((theoreticalAverage - realAverage) * 100) / 100
+    Math.round((futureAverage - realAverage) * 100) / 100
   ).toLocaleString("en", {
     useGrouping: false,
     minimumFractionDigits: 2,
   });
   let changeElement;
 
-  if (theoreticalAverage - realAverage > 0) {
+  if (futureAverage - realAverage > 0) {
     changeElement = `+${change}`;
-  } else if (theoreticalAverage - realAverage === 0) {
+  } else if (futureAverage - realAverage === 0) {
     changeElement = `=${change}`;
   } else {
     changeElement = `${change}`;
@@ -121,12 +121,12 @@ export default function Averages({
           })}
         </span>
       </span>
-      {showTheoreticalAverage && (
+      {showfutureAverage && (
         <span>
-          Including Theoretical Assignments: <br />
+          Including future Assignments: <br />
           <span className={theoryAverageClass}>
             <span className={arrowClass}>{arrow}</span>
-            {theoreticalAverage.toLocaleString("en", {
+            {futureAverage.toLocaleString("en", {
               useGrouping: false,
               minimumFractionDigits: 2,
             })}

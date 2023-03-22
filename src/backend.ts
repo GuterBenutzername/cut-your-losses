@@ -22,11 +22,11 @@ export function isPartialAssignment(argument: unknown): argument is Assignment {
     "name" in argument &&
     "weight" in argument &&
     "grade" in argument &&
-    "theoretical" in argument &&
+    "future" in argument &&
     typeof argument.name === "string" &&
     typeof argument.weight === "number" &&
     typeof argument.grade === "number" &&
-    typeof argument.theoretical === "boolean"
+    typeof argument.future === "boolean"
   );
 }
 
@@ -109,19 +109,19 @@ export function fakeCourse(assignmentsLength: number) {
 // Create a class to hold assignment data in a more efficient manner.
 export class Assignment {
   [immerable] = true;
-  public theoretical;
+  public future;
   public id: string;
   constructor(
     public name: string,
     public grade: number,
     public weight: number,
-    theoretical?: boolean
+    future?: boolean
   ) {
     this.id = uuidv4();
     this.name = name;
     this.grade = grade;
     this.weight = weight;
-    this.theoretical = theoretical ?? false; // If "theoretical" wasn't provided in the constructor, then assume it's false. This makes code easier to read.
+    this.future = future ?? false; // If "future" wasn't provided in the constructor, then assume it's false. This makes code easier to read.
   }
 }
 
@@ -294,7 +294,7 @@ export function importFromCisdCsv(importCsv: string) {
         name: (x as Array<string | number>)[0],
         grade: (x as Array<string | number>)[2],
         weight: (x as Array<string | number>)[1],
-        theoretical: false,
+        future: false,
       }))
       .filter(
         (item) =>
@@ -307,7 +307,7 @@ export function importFromCisdCsv(importCsv: string) {
         assignment.grade = 0;
       } else if (assignment.grade === "-") {
         assignment.grade = 0;
-        assignment.theoretical = true;
+        assignment.future = true;
       }
 
       switch (assignment.weight) {

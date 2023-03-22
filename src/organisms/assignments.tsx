@@ -32,7 +32,7 @@ export default function Assignments({
   onModifyAssignment: (
     event: { target: { value: string } },
     index: number,
-    property: "name" | "grade" | "weight" | "theoretical"
+    property: "name" | "grade" | "weight" | "future"
   ) => void;
   onDeleteAssignment: (index: number) => void;
   onAddAssignment: () => void;

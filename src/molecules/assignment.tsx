@@ -35,7 +35,7 @@ function AssignmentCard({
   onModifyAssignment: (
     event: { target: { value: string } },
     index: number,
-    property: "name" | "grade" | "weight" | "theoretical"
+    property: "name" | "grade" | "weight" | "future"
   ) => void;
   onDeleteAssignment: (index: number) => void;
   autoFocus: boolean;
@@ -155,16 +155,16 @@ function AssignmentCard({
               width: 100%;
             `
           )}
-          aria-label="theoretical"
-          id={`assignment-theoretical-${index}`}
-          checked={assignment.theoretical}
+          aria-label="future"
+          id={`assignment-future-${index}`}
+          checked={assignment.future}
           onChange={(event) => {
-            onModifyAssignment(event, index, "theoretical");
+            onModifyAssignment(event, index, "future");
           }}
         />
         {index === 0 && (
           <label
-            htmlFor="assignment-theoretical-0"
+            htmlFor="assignment-future-0"
             className={cx(
               labelStyle,
               css`
@@ -172,7 +172,7 @@ function AssignmentCard({
               `
             )}
           >
-            Theoretical?
+            Future?
           </label>
         )}
       </span>

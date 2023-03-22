@@ -144,13 +144,13 @@ function App() {
   const onModifyAssignment = (
     event: { target: { value: string } },
     assignmentIndex: number,
-    property: "name" | "grade" | "weight" | "theoretical"
+    property: "name" | "grade" | "weight" | "future"
   ) => {
     const nextCoursesState = produce(
       courses,
       (draft) => {
         const toChange = draft[courseIndex]?.assignments[assignmentIndex];
-        const newValue = toChange.theoretical; // Ensure no race conditions occur if this property is changed
+        const newValue = toChange.future; // Ensure no race conditions occur if this property is changed
         switch (property) {
           case "name": {
             toChange.name = event.target.value;
@@ -176,8 +176,8 @@ function App() {
             break;
           }
 
-          case "theoretical": {
-            toChange.theoretical = !newValue;
+          case "future": {
+            toChange.future = !newValue;
             break;
           }
 
