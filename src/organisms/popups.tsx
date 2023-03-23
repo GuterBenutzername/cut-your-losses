@@ -220,6 +220,11 @@ export default function Popups({
           </span>
         </Popup>
       </div>
+      <div
+        className={css`
+          flex: 1 0 0px;
+        `}
+      />
       <button
         className={courseButtonStyle}
         onClick={() => {
@@ -238,11 +243,6 @@ export default function Popups({
       >
         Import gradebook
       </button>
-      <div
-        className={css`
-          flex: 1 0 0px;
-        `}
-      />
     </>
   );
 }
