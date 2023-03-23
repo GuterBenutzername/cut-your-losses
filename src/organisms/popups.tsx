@@ -243,12 +243,6 @@ export default function Popups({
           flex: 1 0 0px;
         `}
       />
-      <button className={courseButtonStyle} type="button">
-        Options
-      </button>
-      <button className={courseButtonStyle} type="button">
-        Help
-      </button>
     </>
   );
 }
