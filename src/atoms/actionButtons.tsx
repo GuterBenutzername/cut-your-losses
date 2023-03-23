@@ -32,25 +32,24 @@ export default function ActionButtons({
       `}
     >
       <button
-        type="button"
         className={buttonStyle}
         onClick={() => {
           onUndo();
         }}
+        type="button"
       >
         <span className="material-symbols-outlined">undo</span>
       </button>
       <button
-        type="button"
         className={buttonStyle}
         onClick={() => {
           onRedo();
         }}
+        type="button"
       >
         <span className="material-symbols-outlined">redo</span>
       </button>
       <button
-        type="button"
         className={cx(
           buttonStyle,
           css`
@@ -60,6 +59,7 @@ export default function ActionButtons({
         onClick={() => {
           onDeleteCourse();
         }}
+        type="button"
       >
         <span className="material-symbols-outlined">delete</span>
       </button>

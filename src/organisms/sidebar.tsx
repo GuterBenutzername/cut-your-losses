@@ -1,7 +1,9 @@
-import Popup from "react-animated-popup";
-import { importFromCsv, Course } from "../backend";
 import { useEffect, useState } from "react";
 import { css } from "@emotion/css";
+
+import { importFromCsv, importFromCisdCsv, Course } from "../Course";
+
+import Popups from "./popups";
 
 const courseButtonStyle = css`
   background-color: #2c2c2c;
@@ -60,16 +62,13 @@ export default function Sidebar({
   onCreateCourse: (name: string) => void;
   onImportCourse: (course: Course) => void;
 }) {
-  const [creating, setCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [courseNameText, setCourseNameText] = useState("");
   const [width, setWidth] = useState(0);
-  const [importCsvOpen, setImportCsvOpen] = useState(false);
-  const [importCsv, setImportCsv] = useState("");
-  const [importCsvName, setImportCsvName] = useState("");
   useEffect(() => {
-    const updateWidth = () => {
+    function updateWidth() {
       setWidth(window.innerWidth);
-    };
+    }
 
     window.addEventListener("resize", updateWidth, true);
     setWidth(window.innerWidth);
@@ -77,104 +76,45 @@ export default function Sidebar({
       window.removeEventListener("resize", updateWidth, true);
     };
   }, [width]);
-  const onImportCsv = () => {
+  function onImportSchoolCsv(
+    district: string,
+    importSchoolData: string,
+    importSchoolName: string
+  ) {
+    if (importSchoolName.trim() === "") {
+      return;
+    }
+
+    // eslint-disable-next-line sonarjs/no-small-switch
+    switch (district) {
+      case "CISD": {
+        onImportCourse(
+          new Course(importSchoolName, importFromCisdCsv(importSchoolData))
+        );
+        break;
+      }
+      default: {
+        throw new Error("This errror should not occur or exist");
+      }
+    }
+  }
+
+  function onImportCsv(importCsv: string, importCsvName: string) {
     if (importCsvName.trim() === "") {
       return;
     }
 
     const importedAssignments = importFromCsv(importCsv);
-    if (importedAssignments !== undefined) {
-      onImportCourse(new Course(importCsvName, importedAssignments));
-      setImportCsvOpen(false);
-    }
-  };
+    onImportCourse(new Course(importCsvName, importedAssignments));
+  }
 
   return (
+
+    // ESLint mistakenly thinks that this fragment is useless,
+    // despite the fact that it's necessary when using one,
+    // conditionally rendered element.
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      <Popup
-        visible={importCsvOpen}
-        className={css`
-          text-align: center;
-          width: 70vw;
-          max-width: 600px !important;
-        `}
-        onClose={() => {
-          setImportCsvOpen(false);
-        }}
-      >
-        <p>
-          Manually import from CSV (aka copy-paste from Excel) <br />
-          The table <i>must</i> have a header row that contains `name`, `grade`,
-          `weight`, and `theoretical`, where `grade` and `weight` are numbers
-          and `theoretical` is &quot;true&quot; or &quot;false&quot;. The column
-          order does not matter.
-        </p>
-        <br />
-        <textarea
-          className={css`
-            width: 400px;
-            height: 350px;
-          `}
-          value={importCsv}
-          onChange={(event) => {
-            setImportCsv(event.target.value);
-          }}
-        />
-        <br />
-        <p>
-          Since encoding the name of the class would make the CSV harder to
-          create, please input the name of the class here:
-        </p>
-        <span
-          className={css`
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-          `}
-        >
-          <span
-            className={css`
-              position: relative;
-            `}
-          >
-            <label
-              htmlFor="name"
-              className={css`
-                position: absolute;
-                top: -0.8ex;
-                z-index: 1;
-                left: 1rem;
-                background-color: #fff;
-                height: 10px;
-                line-height: 10px;
-                vertical-align: middle;
-                font-size: smaller;
-              `}
-            >
-              Name
-            </label>
-            <input
-              id="name"
-              value={importCsvName}
-              onChange={(event) => {
-                setImportCsvName(event.target.value);
-              }}
-            />
-          </span>
-          <button type="button" onClick={onImportCsv}>
-            Import
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setImportCsvOpen(false);
-            }}
-          >
-            Cancel
-          </button>
-        </span>
-      </Popup>
       {width > 600 && (
         <div
           className={css`
@@ -190,18 +130,19 @@ export default function Sidebar({
             align-items: center;
             gap: 8px;
             padding-top: 16px;
+            padding-bottom: 12px;
             min-width: 0;
           `}
         >
           {courses.map((course, index) => (
             <button
-              key={course.id}
               className={courseButtonStyle}
-              type="button"
+              key={course.id}
               onClick={(event) => {
                 event.currentTarget.blur();
                 onSwapCourse(index);
               }}
+              type="button"
             >
               {currentCourse === index && (
                 <span
@@ -216,7 +157,7 @@ export default function Sidebar({
               {course.name}
             </button>
           ))}
-          {creating ? (
+          {isCreating ? (
             <span
               className={css`
                 background-color: #2c2c2c;
@@ -245,10 +186,12 @@ export default function Sidebar({
                 Course Name
               </label>
               <input
+
+                // See comment in assignments component.
+                // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
-                id="course-input"
-                value={courseNameText}
                 className={newCourseInputStyle}
+                id="course-input"
                 onChange={(event) => {
                   setCourseNameText(event.target.value);
                 }}
@@ -260,18 +203,19 @@ export default function Sidebar({
 
                     onCreateCourse(courseNameText);
                     setCourseNameText("");
-                    setCreating(false);
+                    setIsCreating(false);
                   }
                 }}
+                value={courseNameText}
               />
             </span>
           ) : (
             <button
               className={courseButtonStyle}
-              type="button"
               onClick={() => {
-                setCreating(true);
+                setIsCreating(true);
               }}
+              type="button"
             >
               New Course
             </button>
@@ -281,21 +225,10 @@ export default function Sidebar({
               height: 16px;
             `}
           />
-          <button
-            type="button"
-            className={courseButtonStyle}
-            onClick={() => {
-              setImportCsvOpen(true);
-            }}
-          >
-            Import from CSV
-          </button>
-          <button type="button" className={courseButtonStyle}>
-            Options
-          </button>
-          <button type="button" className={courseButtonStyle}>
-            Help
-          </button>
+          <Popups
+            onImportCsv={onImportCsv}
+            onImportSchoolCsv={onImportSchoolCsv}
+          />
         </div>
       )}
     </>

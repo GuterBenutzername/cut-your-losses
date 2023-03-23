@@ -1,12 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./pages/App";
-import "./index.css";
+import {StrictMode} from "react";
+import {createRoot} from "react-dom/client";
 import { enablePatches } from "immer";
 
+import App from "./pages/App";
+
+import "./index.css";
+
 enablePatches();
-ReactDOM.createRoot(document.querySelector("#root")!).render(
-  <React.StrictMode>
+createRoot(document.querySelector("#root")!).render(
+  <StrictMode>
     <App />
-  </React.StrictMode>
+  </StrictMode>
 );

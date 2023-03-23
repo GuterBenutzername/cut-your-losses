@@ -1,12 +1,14 @@
-import { weightedAverage, type Assignment } from "../backend";
+/* eslint-disable max-statements */
 import { css, cx } from "@emotion/css";
+
+import {type Assignment, weightedAverage} from "../Assignment";
 
 const averageStyle = css`
   font-weight: 700;
   font-size: x-large;
 `;
 
-const theoreticalAverageStyle = css`
+const futureAverageStyle = css`
   font-weight: 700;
   font-size: x-large;
   display: flex;
@@ -18,52 +20,54 @@ const failing = css`
   color: #f00;
 `;
 
+// eslint-disable-next-line sonarjs/cognitive-complexity, complexity
 export default function Averages({
   assignments,
 }: {
   assignments: Assignment[];
 }) {
-  let weights = [...new Set(assignments.map((item) => item.weight))];
+  let weights = Array.from(new Set(assignments.map((item) => item.weight)));
   if (weights.length > 3) {
     weights = weights.slice(0, 3);
   }
 
   if (weights.length < 3) {
-    weights = weights.concat(Array(3).fill(0)).slice(0, 3);
+    // eslint-disable-next-line unicorn/no-new-array
+    weights = weights.concat(new Array(3).fill(0)).slice(0, 3);
   }
 
   let realAverage = weightedAverage(
-    assignments.filter((assignment) => !assignment.theoretical),
+    assignments.filter((assignment) => !assignment.future),
     weights
   );
-  realAverage = Number.isNaN(realAverage) ? 0 : realAverage;
-  let theoreticalAverage = weightedAverage(assignments, weights);
-  theoreticalAverage = Number.isNaN(theoreticalAverage)
-    ? 0
-    : theoreticalAverage;
-  const showTheoreticalAverage = assignments.some(
-    (assignment) => assignment.theoretical
-  );
+  if (Number.isNaN(realAverage)) {
+    realAverage = 0;
+  }
+  let futureAverage = weightedAverage(assignments, weights);
+  if (Number.isNaN(futureAverage)) {
+    futureAverage = 0;
+  }
+  const showfutureAverage = assignments.some((assignment) => assignment.future);
 
-  const theoryAverageClass = cx(theoreticalAverageStyle, {
-    [failing]: theoreticalAverage < 70 && theoreticalAverage > 0,
+  const theoryAverageClass = cx(futureAverageStyle, {
+    [failing]: futureAverage < 70 && futureAverage > 0,
   });
   const realAverageClass = cx(averageStyle, {
-    theory: showTheoreticalAverage,
+    theory: showfutureAverage,
     [failing]: realAverage < 70 && realAverage > 0,
   });
+  // eslint-disable-next-line @typescript-eslint/init-declarations
   let arrow;
-
-  if (realAverage > theoreticalAverage) {
+  if (realAverage > futureAverage) {
     arrow =
-      realAverage < theoreticalAverage ? (
+      realAverage < futureAverage ? (
         <span className="material-symbols-outlined">north</span>
       ) : (
         <span className="material-symbols-outlined">south</span>
       );
   } else {
     arrow =
-      realAverage < theoreticalAverage ? (
+      realAverage < futureAverage ? (
         <span className="material-symbols-outlined">north</span>
       ) : (
         <span className="material-symbols-outlined">east</span>
@@ -73,27 +77,29 @@ export default function Averages({
   const arrowClass = cx("arrow", {
     [css`
       color: #0b0;
-    `]: realAverage < theoreticalAverage,
-    [failing]: realAverage > theoreticalAverage,
+    `]: realAverage < futureAverage,
+
+    [failing]: realAverage > futureAverage,
+
     [css`
       color: #000;
       margin-right: 0;
-    `]: realAverage === theoreticalAverage,
+    `]: realAverage === futureAverage,
   });
   const change = (
-    Math.round((theoreticalAverage - realAverage) * 100) / 100
+    Math.round((futureAverage - realAverage) * 100) / 100
   ).toLocaleString("en", {
     useGrouping: false,
     minimumFractionDigits: 2,
   });
-  let changeElement;
+  let changeElement = "";
 
-  if (theoreticalAverage - realAverage > 0) {
+  if (futureAverage - realAverage > 0) {
     changeElement = `+${change}`;
-  } else if (theoreticalAverage - realAverage === 0) {
+  } else if (futureAverage - realAverage === 0) {
     changeElement = `=${change}`;
   } else {
-    changeElement = `${change}`;
+    changeElement = String(change);
   }
 
   return (
@@ -111,8 +117,7 @@ export default function Averages({
         text-align: center;
       `}
     >
-      <span>
-        Current Average:
+      Current Average:
         <br />
         <span className={realAverageClass}>
           {realAverage.toLocaleString("en", {
@@ -120,13 +125,12 @@ export default function Averages({
             minimumFractionDigits: 2,
           })}
         </span>
-      </span>
-      {showTheoreticalAverage && (
-        <span>
-          Including Theoretical Assignments: <br />
+      {Boolean(showfutureAverage) && (
+        <>
+          Including future Assignments: <br />
           <span className={theoryAverageClass}>
             <span className={arrowClass}>{arrow}</span>
-            {theoreticalAverage.toLocaleString("en", {
+            {futureAverage.toLocaleString("en", {
               useGrouping: false,
               minimumFractionDigits: 2,
             })}
@@ -142,8 +146,9 @@ export default function Averages({
               {changeElement}
             </span>
           </span>
-        </span>
+        </>
       )}
     </div>
   );
 }
+

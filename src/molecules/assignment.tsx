@@ -1,28 +1,45 @@
-import { type Assignment } from "../backend";
 import { css, cx } from "@emotion/css";
 
+import type { Assignment } from "../Assignment";
+
 const assignmentInputStyle = css`
-  width: 50%;
+  width: 100%;
   border-top: 0;
   border-bottom: 0;
 `;
 
+const assignmentWrapperStyle = css`
+  position: relative;
+  flex: 1 0 0px;
+`;
+
+const labelStyle = css`
+  position: absolute;
+  top: -0.8ex;
+  z-index: 1;
+  left: 0.6em;
+  background-color: #fff;
+  height: 10px;
+  line-height: 10px;
+  vertical-align: middle;
+  font-size: smaller;
+`;
 function AssignmentCard({
   assignment,
   index,
   onModifyAssignment,
   onDeleteAssignment,
-  autoFocus,
+  shouldAutoFocus,
 }: {
   assignment: Assignment;
   index: number;
   onModifyAssignment: (
     event: { target: { value: string } },
     index: number,
-    property: "name" | "grade" | "weight" | "theoretical"
+    property: "future" | "grade" | "name" | "weight"
   ) => void;
   onDeleteAssignment: (index: number) => void;
-  autoFocus: boolean;
+  shouldAutoFocus: boolean;
 }) {
   return (
     <div
@@ -50,7 +67,6 @@ function AssignmentCard({
       `}
     >
       <button
-        type="button"
         aria-label="delete"
         className={css`
           border-top: 0;
@@ -59,51 +75,85 @@ function AssignmentCard({
         onClick={() => {
           onDeleteAssignment(index);
         }}
+        type="button"
       >
         X
       </button>
-      <input
-        autoFocus={autoFocus}
-        aria-label="name"
-        value={assignment.name}
-        className={assignmentInputStyle}
-        onChange={(event) => {
-          onModifyAssignment(event, index, "name");
-        }}
-      />
-      <input
-        type="number"
-        aria-label="grade"
-        step="1"
-        className={assignmentInputStyle}
-        value={assignment.grade.toString()}
-        onChange={(event) => {
-          onModifyAssignment(event, index, "grade");
-        }}
-      />
-      <input
-        type="number"
-        step="0.01"
+      <span className={assignmentWrapperStyle}>
+        <input
+          aria-label="name"
+
+          // A careful review of autofocus a11y studies seems to indicate that
+          // autofocus won't be a significant issue, as it follows the basic
+          // expected flow of this interaction
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus={shouldAutoFocus}
+          className={assignmentInputStyle}
+          id={`assignment-name-${index}`}
+          onChange={(event) => {
+            onModifyAssignment(event, index, "name");
+          }}
+          value={assignment.name}
+        />
+        {index === 0 && (
+          <label className={labelStyle} htmlFor="assignment-name-0">
+            Name
+          </label>
+        )}
+      </span>
+      <span className={assignmentWrapperStyle}>
+        <input
+          aria-label="grade"
+          className={assignmentInputStyle}
+          id={`assignment-grade-${index}`}
+          onChange={(event) => {
+            onModifyAssignment(event, index, "grade");
+          }}
+          step="1"
+          type="number"
+          value={assignment.grade.toString()}
+        />
+        {index === 0 && (
+          <label className={labelStyle} htmlFor="assignment-grade-0">
+            Grade
+          </label>
+        )}
+      </span>
+      <span className={assignmentWrapperStyle}>
+        <input
+          aria-label="weight"
+          className={cx(
+            assignmentInputStyle,
+            css`
+              border-right: 2px solid #000;
+            `
+          )}
+          id={`assignment-weight-${index}`}
+          onChange={(event) => {
+            onModifyAssignment(event, index, "weight");
+          }}
+          step="0.01"
+          type="number"
+          value={assignment.weight.toString()}
+        />
+        {index === 0 && (
+          <label className={labelStyle} htmlFor="assignment-weight-0">
+            Weight
+          </label>
+        )}
+      </span>
+      <span
         className={cx(
-          assignmentInputStyle,
+          assignmentWrapperStyle,
           css`
-            border-right: 2px solid #000;
+            width: 50%;
+            text-align: center;
           `
         )}
-        aria-label="weight"
-        value={assignment.weight.toString()}
-        onChange={(event) => {
-          onModifyAssignment(event, index, "weight");
-        }}
-      />
-      <span
-        className={css`
-          width: 50%;
-          text-align: center;
-        `}
       >
         <input
-          type="checkbox"
+          aria-label="future"
+          checked={assignment.future}
           className={cx(
             assignmentInputStyle,
             css`
@@ -112,12 +162,25 @@ function AssignmentCard({
               width: 100%;
             `
           )}
-          aria-label="theoretical"
-          checked={assignment.theoretical}
+          id={`assignment-future-${index}`}
           onChange={(event) => {
-            onModifyAssignment(event, index, "theoretical");
+            onModifyAssignment(event, index, "future");
           }}
+          type="checkbox"
         />
+        {index === 0 && (
+          <label
+            className={cx(
+              labelStyle,
+              css`
+                top: -1.4ex;
+              `
+            )}
+            htmlFor="assignment-future-0"
+          >
+            Future?
+          </label>
+        )}
       </span>
     </div>
   );

@@ -1,6 +1,7 @@
-import { type Assignment } from "../backend";
-import AssignmentCard from "../molecules/assignment";
 import { css } from "@emotion/css";
+
+import type {Assignment} from "../Assignment";
+import AssignmentCard from "../molecules/assignment";
 
 const addAssignmentButtonStyle = css`
   border: 0 !important;
@@ -32,7 +33,7 @@ export default function Assignments({
   onModifyAssignment: (
     event: { target: { value: string } },
     index: number,
-    property: "name" | "grade" | "weight" | "theoretical"
+    property: "future" | "grade" | "name" | "weight"
   ) => void;
   onDeleteAssignment: (index: number) => void;
   onAddAssignment: () => void;
@@ -50,20 +51,20 @@ export default function Assignments({
     >
       {assignments.map((assignment, index) => (
         <AssignmentCard
-          key={assignment.id}
-          autoFocus={index === 0 && assignment.name === ""}
           assignment={assignment}
           index={index}
+          key={assignment.id}
           onDeleteAssignment={onDeleteAssignment}
           onModifyAssignment={onModifyAssignment}
+          shouldAutoFocus={index === 0 && assignment.name === ""}
         />
       ))}
       <button
-        type="button"
         className={addAssignmentButtonStyle}
         onClick={() => {
           onAddAssignment();
         }}
+        type="button"
       >
         +
       </button>
