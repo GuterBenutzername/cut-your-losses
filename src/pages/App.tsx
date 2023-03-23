@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import produce, { applyPatches, type Patch } from "immer";
+import { applyPatches, produce, type Patch } from "immer";
 import { css } from "@emotion/css";
 
 import { Course, isCourseArray } from "../Course";
@@ -254,7 +254,7 @@ function App() {
           z-index: 2;
         `}
       >
-        Version 0.2.0 | © 2023 Adam Y. Cole II, founder of The Adam Co.
+        Version 0.3.0 | © 2023 Adam Y. Cole II, founder of The Adam Co.
       </span>
     </>
   );
