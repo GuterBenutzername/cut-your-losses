@@ -1,6 +1,6 @@
 import { css, cx } from "@emotion/css";
 
-import type { Assignment } from "../backend";
+import type { Assignment } from "../Assignment";
 
 const assignmentInputStyle = css`
   width: 100%;
@@ -29,7 +29,7 @@ function AssignmentCard({
   index,
   onModifyAssignment,
   onDeleteAssignment,
-  autoFocus,
+  shouldAutoFocus,
 }: {
   assignment: Assignment;
   index: number;
@@ -39,7 +39,7 @@ function AssignmentCard({
     property: "future" | "grade" | "name" | "weight"
   ) => void;
   onDeleteAssignment: (index: number) => void;
-  autoFocus: boolean;
+  shouldAutoFocus: boolean;
 }) {
   return (
     <div
@@ -82,7 +82,12 @@ function AssignmentCard({
       <span className={assignmentWrapperStyle}>
         <input
           aria-label="name"
-          autoFocus={autoFocus}
+
+          // A careful review of autofocus a11y studies seems to indicate that
+          // autofocus won't be a significant issue, as it follows the basic
+          // expected flow of this interaction
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus={shouldAutoFocus}
           className={assignmentInputStyle}
           id={`assignment-name-${index}`}
           onChange={(event) => {

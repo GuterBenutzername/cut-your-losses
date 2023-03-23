@@ -1,6 +1,7 @@
+/* eslint-disable max-statements */
 import { css, cx } from "@emotion/css";
 
-import { weightedAverage, type Assignment } from "../backend";
+import {type Assignment, weightedAverage} from "../Assignment";
 
 const averageStyle = css`
   font-weight: 700;
@@ -19,6 +20,7 @@ const failing = css`
   color: #f00;
 `;
 
+// eslint-disable-next-line sonarjs/cognitive-complexity, complexity
 export default function Averages({
   assignments,
 }: {
@@ -30,7 +32,8 @@ export default function Averages({
   }
 
   if (weights.length < 3) {
-    weights = weights.concat(Array(3).fill(0)).slice(0, 3);
+    // eslint-disable-next-line unicorn/no-new-array
+    weights = weights.concat(new Array(3).fill(0)).slice(0, 3);
   }
 
   let realAverage = weightedAverage(
@@ -53,8 +56,8 @@ export default function Averages({
     theory: showfutureAverage,
     [failing]: realAverage < 70 && realAverage > 0,
   });
+  // eslint-disable-next-line @typescript-eslint/init-declarations
   let arrow;
-
   if (realAverage > futureAverage) {
     arrow =
       realAverage < futureAverage ? (
@@ -89,7 +92,7 @@ export default function Averages({
     useGrouping: false,
     minimumFractionDigits: 2,
   });
-  let changeElement;
+  let changeElement = "";
 
   if (futureAverage - realAverage > 0) {
     changeElement = `+${change}`;
@@ -114,8 +117,7 @@ export default function Averages({
         text-align: center;
       `}
     >
-      <span>
-        Current Average:
+      Current Average:
         <br />
         <span className={realAverageClass}>
           {realAverage.toLocaleString("en", {
@@ -123,9 +125,8 @@ export default function Averages({
             minimumFractionDigits: 2,
           })}
         </span>
-      </span>
       {Boolean(showfutureAverage) && (
-        <span>
+        <>
           Including future Assignments: <br />
           <span className={theoryAverageClass}>
             <span className={arrowClass}>{arrow}</span>
@@ -145,7 +146,7 @@ export default function Averages({
               {changeElement}
             </span>
           </span>
-        </span>
+        </>
       )}
     </div>
   );

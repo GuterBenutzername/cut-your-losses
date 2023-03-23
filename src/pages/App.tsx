@@ -2,36 +2,39 @@ import { useState, useEffect } from "react";
 import produce, { applyPatches, type Patch } from "immer";
 import { css } from "@emotion/css";
 
-import { Course, isCourseArray, Assignment } from "../backend";
+import { Course, isCourseArray } from "../Course";
+import { Assignment } from "../Assignment";
 import CourseTemplate from "../organisms/course";
 import Sidebar from "../organisms/sidebar";
 import ActionButtons from "../atoms/actionButtons";
 
-function arrayEquals(a: unknown, b: unknown) {
+function arrayEquals(array1: unknown, array2: unknown) {
   return (
-    Array.isArray(a) &&
-    Array.isArray(b) &&
-    a.length === b.length &&
-    a.every((value, index) => value === b[index])
+    Array.isArray(array1) &&
+    Array.isArray(array2) &&
+    array1.length === array2.length &&
+    array1.every((value, index) => value === array2[index])
   );
 }
 
 function App() {
-  const [courses, setCourses] = useState<Course[]>(
-    localStorage.getItem("courses") === null ||
-      !isCourseArray(JSON.parse(localStorage.getItem("courses")!))
-      ? []
-      : (JSON.parse(localStorage.getItem("courses")!) as Course[])
-  );
+  const [courses, setCourses] = useState<Course[]>([]);
   const [coursePatches, setCoursePatches] = useState<
     { undo: Patch[]; redo: Patch[] }[]
   >([]);
   const [currentVersion, setCurrentVersion] = useState<number>(-1);
   const [courseIndex, setCourseIndex] = useState<number>(0);
   useEffect(() => {
+    setCourses(
+      (localStorage.getItem("courses") !== null && isCourseArray(JSON.parse(localStorage.getItem("courses")!)))
+        ? (JSON.parse(localStorage.getItem("courses")!) as Course[])
+        : ([])
+    );
+  }, []);
+  useEffect(() => {
     localStorage.setItem("courses", JSON.stringify(courses));
   }, [courses]);
-  const saveChanges = (redo: Patch[], undo: Patch[]) => {
+  function saveChanges(redo: Patch[], undo: Patch[]) {
     setCurrentVersion(currentVersion + 1);
     setCoursePatches(
       produce(coursePatches, (draft) => {
@@ -49,13 +52,12 @@ function App() {
         }
       })
     );
-  };
+  }
 
-  const saveChangesOnModifyAssignment = (patches: Patch[], undo: Patch[]) => {
+  function saveChangesOnModifyAssignment(patches: Patch[], undo: Patch[]) {
     setCoursePatches(
       produce(coursePatches, (draft) => {
         if (
-          patches[0] !== undefined &&
           coursePatches.at(-1)?.redo[0] !== undefined &&
           arrayEquals(coursePatches.at(-1)?.redo[0].path, patches[0].path)
         ) {
@@ -80,19 +82,19 @@ function App() {
         }
       })
     );
-  };
+  }
 
-  const onUndo = () => {
+  function onUndo() {
     setCourses(applyPatches(courses, coursePatches[currentVersion].undo));
     setCurrentVersion(currentVersion - 1);
-  };
+  }
 
-  const onRedo = () => {
+  function onRedo() {
     setCourses(applyPatches(courses, coursePatches[currentVersion + 1].redo));
     setCurrentVersion(currentVersion + 1);
-  };
+  }
 
-  const onCreateCourse = (name: string) => {
+  function onCreateCourse(name: string) {
     const nextState = produce(
       courses,
       (draft) => {
@@ -102,9 +104,9 @@ function App() {
     );
     setCourses(nextState);
     setCourseIndex(0);
-  };
+  }
 
-  const onImportCourse = (course: Course) => {
+  function onImportCourse(course: Course) {
     const nextState = produce(
       courses,
       (draft) => {
@@ -114,13 +116,13 @@ function App() {
     );
     setCourses(nextState);
     setCourseIndex(0);
-  };
+  }
 
-  const onSwapCourse = (index: number) => {
+  function onSwapCourse(index: number) {
     setCourseIndex(index);
-  };
+  }
 
-  const onDeleteCourse = (index: number) => {
+  function onDeleteCourse(index: number) {
     const nextState = produce(
       courses,
       (draft) => {
@@ -132,54 +134,63 @@ function App() {
     if (courseIndex > courses.length - 2) {
       setCourseIndex(0);
     }
-  };
+  }
 
   const currentCourse =
     courses.length > 0 ? courses[courseIndex] : new Course("", []);
-  const onModifyAssignment = (
+  function onModifyAssignment(
     event: { target: { value: string } },
     assignmentIndex: number,
     property: "future" | "grade" | "name" | "weight"
-  ) => {
+  ) {
     const nextCoursesState = produce(
       courses,
       (draft) => {
         const toChange = draft[courseIndex]?.assignments[assignmentIndex];
-        const newValue = toChange.future; // Ensure no race conditions occur if this property is changed
+
+        // Ensure no race conditions occur if this property is changed
+        const isFuture = toChange.future;
         switch (property) {
-          case "name":
+          case "name": {
             toChange.name = event.target.value;
             break;
+          }
 
-          case "weight":
-            if (Number(event.target.value) <= 1 &&
-            Number(event.target.value) >= 0) {
+          case "weight": {
+            if (
+              Number(event.target.value) <= 1 &&
+              Number(event.target.value) >= 0
+            ) {
               toChange.weight = Number(event.target.value);
             }
 
             break;
+          }
 
-          case "grade":
+          case "grade": {
             if (Number(event.target.value) >= 0) {
               toChange.grade = Number(event.target.value);
             }
 
             break;
+          }
 
-          case "future":
-            toChange.future = !newValue;
+          case "future": {
+            toChange.future = !isFuture;
             break;
+          }
 
-          default:
+          default: {
             break;
+          }
         }
       },
       saveChangesOnModifyAssignment
     );
     setCourses(nextCoursesState);
-  };
+  }
 
-  const onDeleteAssignment = (assignmentIndex: number) => {
+  function onDeleteAssignment(assignmentIndex: number) {
     const nextCoursesState = produce(
       courses,
       (draft) => {
@@ -188,9 +199,9 @@ function App() {
       saveChanges
     );
     setCourses(nextCoursesState);
-  };
+  }
 
-  const onAddAssignment = () => {
+  function onAddAssignment() {
     const nextCoursesState = produce(
       courses,
       (draft) => {
@@ -199,7 +210,7 @@ function App() {
       saveChanges
     );
     setCourses(nextCoursesState);
-  };
+  }
 
   return (
     <>
@@ -250,4 +261,3 @@ function App() {
 }
 
 export default App;
-

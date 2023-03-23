@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import { css, cx } from "@emotion/css";
+import { useState, useEffect, useLayoutEffect } from "react";
+import { css } from "@emotion/css";
 
 const containerStyle = css`
   position: fixed;
@@ -15,50 +15,49 @@ const containerStyle = css`
 
 export default function Popup({
   children,
-  visible,
+  isVisible,
   onClose,
-  className,
 }: {
   children: React.ReactNode;
-  visible: boolean;
+  isVisible: boolean;
   onClose: () => void;
-  className?: string;
 }) {
-  const [firstTimeSetup, setFirstTimeSetup] = useState(true);
-  const [animationState, setAnimationState] = useState(visible);
-  const [displayNothing, setDisplayNothing] = useState(!visible);
+  const [isFirstTimeSetup, setIsFirstTimeSetup] = useState(true);
+  const [animationState, setAnimationState] = useState(isVisible);
+  const [shouldDisplayNothing, setShouldDisplayNothing] = useState(!isVisible);
 
   useLayoutEffect(() => {
-    if (firstTimeSetup) {
+    if (isFirstTimeSetup) {
       return;
     }
-    if (displayNothing) {
+    if (shouldDisplayNothing) {
       return;
     }
 
-    // Fix to make sure the element has been rendered before we start the animation otherwise react might execute before doing a re-render
     window.setTimeout(() => {
       setAnimationState(true);
     }, 1);
-  }, [displayNothing, firstTimeSetup]);
+  }, [shouldDisplayNothing, isFirstTimeSetup]);
 
   useEffect(() => {
-    setFirstTimeSetup(false);
-    if (firstTimeSetup) {
+    setIsFirstTimeSetup(false);
+    if (isFirstTimeSetup) {
       return;
     }
 
-    if (visible) {
-      setDisplayNothing(false);
-    } else if (!displayNothing) {
+    if (isVisible) {
+      setShouldDisplayNothing(false);
+      // eslint-disable-next-line sonarjs/elseif-without-else
+    } else if (!shouldDisplayNothing) {
       setAnimationState(false);
       window.setTimeout(() => {
-        setDisplayNothing(true);
+        setShouldDisplayNothing(true);
       }, 100);
     }
-  }, [visible, firstTimeSetup, displayNothing]);
+  }, [isVisible, isFirstTimeSetup, shouldDisplayNothing]);
 
-  if (displayNothing) {
+  if (shouldDisplayNothing) {
+    // eslint-disable-next-line unicorn/no-null
     return null;
   }
   const promptStyle = css`
@@ -72,12 +71,22 @@ export default function Popup({
     opacity: ${animationState ? 1 : 0};
     transform: ${animationState ? "scale(1)" : "scale(0.9)"};
     cursor: default;
+    text-align: center;
+    width: 70vw;
+    max-width: 600px !important;
   `;
 
   return (
-    <div className={containerStyle} onClick={onClose}>
+    // eslint-disable-next-line max-len
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+    <div
+      className={containerStyle}
+      onClick={onClose}
+    >
+      {/* eslint-disable-next-line max-len */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div
-        className={cx(promptStyle, className)}
+        className={promptStyle}
         onClick={(event: React.MouseEvent) => {
           event.stopPropagation();
         }}

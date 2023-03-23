@@ -1,6 +1,6 @@
 import { css } from "@emotion/css";
 
-import type { Course } from "../backend";
+import type { Course } from "../Course";
 import Averages from "../molecules/averages";
 
 import Assignments from "./assignments";
@@ -45,16 +45,14 @@ export default function CourseTemplate({
   onAddAssignment: () => void;
 }) {
   return (
-    <div>
-      <div className={primaryViewStyle}>
-        <Averages assignments={course.assignments} />
-        <Assignments
-          assignments={course.assignments}
-          onAddAssignment={onAddAssignment}
-          onDeleteAssignment={onDeleteAssignment}
-          onModifyAssignment={onModifyAssignment}
-        />
-      </div>
+    <div className={primaryViewStyle}>
+      <Averages assignments={course.assignments} />
+      <Assignments
+        assignments={course.assignments}
+        onAddAssignment={onAddAssignment}
+        onDeleteAssignment={onDeleteAssignment}
+        onModifyAssignment={onModifyAssignment}
+      />
     </div>
   );
 }

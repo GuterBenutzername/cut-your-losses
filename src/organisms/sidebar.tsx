@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { css } from "@emotion/css";
 
-import { importFromCsv, importFromCisdCsv, Course } from "../backend";
+import { importFromCsv, importFromCisdCsv, Course } from "../Course";
 
-import { Popups } from "./popups";
+import Popups from "./popups";
 
-export const courseButtonStyle = css`
+const courseButtonStyle = css`
   background-color: #2c2c2c;
   height: 32px;
   border-radius: 8px;
@@ -62,13 +62,13 @@ export default function Sidebar({
   onCreateCourse: (name: string) => void;
   onImportCourse: (course: Course) => void;
 }) {
-  const [creating, setCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [courseNameText, setCourseNameText] = useState("");
   const [width, setWidth] = useState(0);
   useEffect(() => {
-    const updateWidth = () => {
+    function updateWidth() {
       setWidth(window.innerWidth);
-    };
+    }
 
     window.addEventListener("resize", updateWidth, true);
     setWidth(window.innerWidth);
@@ -76,15 +76,16 @@ export default function Sidebar({
       window.removeEventListener("resize", updateWidth, true);
     };
   }, [width]);
-  const onImportSchoolCsv = (
+  function onImportSchoolCsv(
     district: string,
     importSchoolData: string,
     importSchoolName: string
-  ) => {
+  ) {
     if (importSchoolName.trim() === "") {
       return;
     }
 
+    // eslint-disable-next-line sonarjs/no-small-switch
     switch (district) {
       case "CISD": {
         onImportCourse(
@@ -96,20 +97,19 @@ export default function Sidebar({
         throw new Error("This errror should not occur or exist");
       }
     }
-  };
+  }
 
-  const onImportCsv = (importCsv: string, importCsvName: string) => {
+  function onImportCsv(importCsv: string, importCsvName: string) {
     if (importCsvName.trim() === "") {
       return;
     }
 
     const importedAssignments = importFromCsv(importCsv);
-    if (importedAssignments !== undefined) {
-      onImportCourse(new Course(importCsvName, importedAssignments));
-    }
-  };
+    onImportCourse(new Course(importCsvName, importedAssignments));
+  }
 
   return (
+
     // ESLint mistakenly thinks that this fragment is useless,
     // despite the fact that it's necessary when using one,
     // conditionally rendered element.
@@ -157,7 +157,7 @@ export default function Sidebar({
               {course.name}
             </button>
           ))}
-          {creating ? (
+          {isCreating ? (
             <span
               className={css`
                 background-color: #2c2c2c;
@@ -186,6 +186,9 @@ export default function Sidebar({
                 Course Name
               </label>
               <input
+
+                // See comment in assignments component.
+                // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
                 className={newCourseInputStyle}
                 id="course-input"
@@ -200,7 +203,7 @@ export default function Sidebar({
 
                     onCreateCourse(courseNameText);
                     setCourseNameText("");
-                    setCreating(false);
+                    setIsCreating(false);
                   }
                 }}
                 value={courseNameText}
@@ -210,7 +213,7 @@ export default function Sidebar({
             <button
               className={courseButtonStyle}
               onClick={() => {
-                setCreating(true);
+                setIsCreating(true);
               }}
               type="button"
             >

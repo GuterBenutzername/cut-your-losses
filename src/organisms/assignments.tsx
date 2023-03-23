@@ -1,6 +1,6 @@
 import { css } from "@emotion/css";
 
-import type { Assignment } from "../backend";
+import type {Assignment} from "../Assignment";
 import AssignmentCard from "../molecules/assignment";
 
 const addAssignmentButtonStyle = css`
@@ -52,11 +52,11 @@ export default function Assignments({
       {assignments.map((assignment, index) => (
         <AssignmentCard
           assignment={assignment}
-          autoFocus={index === 0 && assignment.name === ""}
           index={index}
           key={assignment.id}
           onDeleteAssignment={onDeleteAssignment}
           onModifyAssignment={onModifyAssignment}
+          shouldAutoFocus={index === 0 && assignment.name === ""}
         />
       ))}
       <button
