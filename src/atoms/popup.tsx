@@ -10,7 +10,7 @@ const containerStyle = css`
   height: 100vh;
   justify-content: center;
   align-items: center;
-  zindex: 999;
+  z-index: 99;
 `;
 
 export default function Popup({
