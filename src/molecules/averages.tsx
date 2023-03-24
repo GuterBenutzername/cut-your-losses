@@ -1,7 +1,8 @@
+/* eslint-disable @shopify/jsx-prefer-fragment-wrappers */
 /* eslint-disable max-statements */
 import { css, cx } from "@emotion/css";
 
-import {type Assignment, weightedAverage} from "../Assignment";
+import { type Assignment, weightedAverage } from "../Assignment";
 
 const averageStyle = css`
   font-weight: 700;
@@ -117,7 +118,8 @@ export default function Averages({
         text-align: center;
       `}
     >
-      Current Average:
+      <span>
+        Current Average:
         <br />
         <span className={realAverageClass}>
           {realAverage.toLocaleString("en", {
@@ -125,8 +127,9 @@ export default function Averages({
             minimumFractionDigits: 2,
           })}
         </span>
+      </span>
       {Boolean(showfutureAverage) && (
-        <>
+        <span>
           Including future Assignments: <br />
           <span className={theoryAverageClass}>
             <span className={arrowClass}>{arrow}</span>
@@ -146,9 +149,8 @@ export default function Averages({
               {changeElement}
             </span>
           </span>
-        </>
+        </span>
       )}
     </div>
   );
 }
-
