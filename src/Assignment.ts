@@ -63,7 +63,7 @@ function gradeArrayAvg(array: readonly Assignment[]) {
 
 function solveForTwoWeights(weightA: number, weightB: number) {
   if (weightA + weightB === 0) {
-    return [0,0];
+    return [0, 0];
   }
   return [
     // eslint-disable-next-line total-functions/no-partial-division
@@ -78,7 +78,7 @@ function solveAllForTwoWeights(weights: readonly number[]) {
     solveForTwoWeights(weights[1], weights[0]),
     solveForTwoWeights(weights[1], weights[2]),
     solveForTwoWeights(weights[0], weights[2]),
-  ]
+  ];
 }
 
 function seperateArrayByWeights(
@@ -151,22 +151,23 @@ export function fakeAssignmentArray(
 }
 
 function checkForEdgeCases(array: Assignment[], weights: number[]) {
-  return weights.length === 0 ||
+  return (
+    weights.length === 0 ||
     weights.length > 3 ||
     !array.every((element) => element.grade >= 0) ||
     // eslint-disable-next-line total-functions/no-partial-array-reduce
     weights.reduce((previous, current) => previous + current) > 1 ||
-    !weights.every((element) => element >= 0);
+    !weights.every((element) => element >= 0)
+  );
 }
 
 // Get a weighted average of assignments with three different weight amounts
 export function weightedAverage(array: Assignment[], weights: number[]) {
-  if (
-    !checkForEdgeCases(array, weights)
-  ) {
+  if (!checkForEdgeCases(array, weights)) {
     return Number.NaN;
   }
-  let [assignmentsWithWeightA, assignmentsWithWeightB, assignmentsWithWeightC] = seperateArrayByWeights(array, weights);
+  let [assignmentsWithWeightA, assignmentsWithWeightB, assignmentsWithWeightC] =
+    seperateArrayByWeights(array, weights);
   switch (0) {
     case assignmentsWithWeightB.length + assignmentsWithWeightC.length: {
       return gradeArrayAvg(assignmentsWithWeightA);
@@ -190,7 +191,8 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
     assignmentsWithWeightA = [
       new Assignment(
         placeholderText,
-        gradeArrayAvg(assignmentsWithWeightB) * bc[0] + gradeArrayAvg(assignmentsWithWeightC) * bc[1],
+        gradeArrayAvg(assignmentsWithWeightB) * bc[0] +
+          gradeArrayAvg(assignmentsWithWeightC) * bc[1],
         weights[0]
       ),
     ];
@@ -200,7 +202,8 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
     assignmentsWithWeightB = [
       new Assignment(
         placeholderText,
-        gradeArrayAvg(assignmentsWithWeightA) * ac[0] + gradeArrayAvg(assignmentsWithWeightC) * ac[1],
+        gradeArrayAvg(assignmentsWithWeightA) * ac[0] +
+          gradeArrayAvg(assignmentsWithWeightC) * ac[1],
         weights[1]
       ),
     ];
@@ -210,7 +213,8 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
     assignmentsWithWeightC = [
       new Assignment(
         placeholderText,
-        gradeArrayAvg(assignmentsWithWeightB) * ba[0] + gradeArrayAvg(assignmentsWithWeightA) * ba[1],
+        gradeArrayAvg(assignmentsWithWeightB) * ba[0] +
+          gradeArrayAvg(assignmentsWithWeightA) * ba[1],
         weights[2]
       ),
     ];

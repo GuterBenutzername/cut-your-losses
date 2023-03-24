@@ -26,9 +26,10 @@ function App() {
   const [courseIndex, setCourseIndex] = useState<number>(0);
   useEffect(() => {
     setCourses(
-      (localStorage.getItem("courses") !== null && isCourseArray(JSON.parse(localStorage.getItem("courses")!)))
+      localStorage.getItem("courses") !== null &&
+        isCourseArray(JSON.parse(localStorage.getItem("courses")!))
         ? (JSON.parse(localStorage.getItem("courses")!) as Course[])
-        : ([])
+        : []
     );
   }, []);
   useEffect(() => {
@@ -264,8 +265,8 @@ function App() {
                 width: 75%;
               `}
             >
-              Click on the &quot;New Course&quot; button to create one, or click on
-              the &quot;Import Gradebook&quot; button to import directly from
+              Click on the &quot;New Course&quot; button to create one, or click
+              on the &quot;Import Gradebook&quot; button to import directly from
               your school&apos;s grading system (if supported).
             </p>
           </div>

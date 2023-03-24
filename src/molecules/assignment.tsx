@@ -82,7 +82,6 @@ function AssignmentCard({
       <span className={assignmentWrapperStyle}>
         <input
           aria-label="name"
-
           // A careful review of autofocus a11y studies seems to indicate that
           // autofocus won't be a significant issue, as it follows the basic
           // expected flow of this interaction

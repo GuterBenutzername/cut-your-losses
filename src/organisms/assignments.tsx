@@ -1,6 +1,6 @@
 import { css } from "@emotion/css";
 
-import type {Assignment} from "../Assignment";
+import type { Assignment } from "../Assignment";
 import AssignmentCard from "../molecules/assignment";
 
 const addAssignmentButtonStyle = css`
