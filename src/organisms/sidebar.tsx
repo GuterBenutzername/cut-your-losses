@@ -134,6 +134,15 @@ export default function Sidebar({
             min-width: 0;
           `}
         >
+          <span
+            className={css`
+              color: #8ab;
+              font-weight: bolder;
+              font-size: large;
+            `}
+          >
+            Cut Your Losses
+          </span>
           {courses.map((course, index) => (
             <button
               className={courseButtonStyle}
