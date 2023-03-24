@@ -1,9 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { css } from "@emotion/css";
 
 import { importFromCsv, importFromCisdCsv, Course } from "../Course";
 
 import Popups from "./popups";
+
+function isPointerEventInsideElement(
+  event: MouseEvent,
+  element: HTMLInputElement
+) {
+  const pos = {
+    // eslint-disable-next-line id-length
+    x: event.pageX,
+    // eslint-disable-next-line id-length
+    y: event.pageY,
+  };
+  const rect = element.getBoundingClientRect();
+  return (
+    pos.x < rect.right &&
+    pos.x > rect.left &&
+    pos.y < rect.bottom &&
+    pos.y > rect.top
+  );
+}
 
 const courseButtonStyle = css`
   background-color: #2c2c2c;
@@ -36,6 +55,7 @@ const newCourseInputLabelStyle = css`
   vertical-align: middle;
   font-size: smaller;
 `;
+
 const newCourseInputStyle = css`
   width: 95%;
   margin: 0;
@@ -65,6 +85,8 @@ export default function Sidebar({
   const [isCreating, setIsCreating] = useState(false);
   const [courseNameText, setCourseNameText] = useState("");
   const [width, setWidth] = useState(0);
+  const createInputRef = useRef<HTMLInputElement | null>(null);
+
   useEffect(() => {
     function updateWidth() {
       setWidth(window.innerWidth);
@@ -76,6 +98,27 @@ export default function Sidebar({
       window.removeEventListener("resize", updateWidth, true);
     };
   }, [width]);
+
+  useEffect(() => {
+    function callback(event: MouseEvent): void {
+      if (
+        createInputRef.current &&
+        isCreating &&
+        !isPointerEventInsideElement(event, createInputRef.current)
+      ) {
+        if (courseNameText.trim() !== "") {
+          onCreateCourse(courseNameText);
+          setCourseNameText("");
+        }
+        setIsCreating(false);
+      }
+    }
+    document.addEventListener("click", callback);
+    return () => {
+      document.removeEventListener("click", callback);
+    };
+  });
+
   function onImportSchoolCsv(
     district: string,
     importSchoolData: string,
@@ -109,7 +152,6 @@ export default function Sidebar({
   }
 
   return (
-
     // ESLint mistakenly thinks that this fragment is useless,
     // despite the fact that it's necessary when using one,
     // conditionally rendered element.
@@ -134,15 +176,17 @@ export default function Sidebar({
             min-width: 0;
           `}
         >
-          <span
+          <h1
             className={css`
               color: #8ab;
               font-weight: bolder;
               font-size: large;
+              margin: 0;
+              margin-bottom: 8px;
             `}
           >
             Cut Your Losses
-          </span>
+          </h1>
           {courses.map((course, index) => (
             <button
               className={courseButtonStyle}
@@ -187,6 +231,7 @@ export default function Sidebar({
                   outline: #666 solid 3px;
                 }
               `}
+              ref={createInputRef}
             >
               <label
                 className={newCourseInputLabelStyle}
@@ -195,7 +240,6 @@ export default function Sidebar({
                 Course Name
               </label>
               <input
-
                 // See comment in assignments component.
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
