@@ -1,8 +1,14 @@
-import {parse} from "papaparse";
+import { parse } from "papaparse";
 import { immerable } from "immer";
 import { v4 as uuidv4 } from "uuid";
 
-import {type Assignment, isAssignmentArray, randConVowString, fakeAssignmentArray, addIds} from "./Assignment";
+import {
+  type Assignment,
+  isAssignmentArray,
+  randConVowString,
+  fakeAssignmentArray,
+  addIds,
+} from "./Assignment";
 
 export class Course {
   public [immerable] = true;
@@ -11,7 +17,7 @@ export class Course {
 
   public name: string;
 
-  public assignments: Assignment[]
+  public assignments: Assignment[];
 
   public constructor(name: string, assignments: Assignment[]) {
     this.id = uuidv4();
@@ -41,14 +47,12 @@ export function isCourseArray(argument: unknown): argument is Course[] {
   );
 }
 
-
 export function fakeCourse(assignmentsLength: number) {
   return new Course(
     randConVowString(6),
     fakeAssignmentArray([0.6, 0.25, 0.15], assignmentsLength)
   );
 }
-
 
 export function importFromCsv(importCsv: string) {
   const { data } = parse(importCsv, {
@@ -99,7 +103,7 @@ export function importFromCisdCsv(importCsv: string) {
     assignments.forEach((assignment) => {
       if (assignment.grade === "Z") {
         assignment.grade = 0;
-      // eslint-disable-next-line sonarjs/elseif-without-else
+        // eslint-disable-next-line sonarjs/elseif-without-else
       } else if (assignment.grade === "-") {
         assignment.grade = 0;
         assignment.future = true;
@@ -130,66 +134,3 @@ export function importFromCisdCsv(importCsv: string) {
 
   throw new Error("Import failed during parsing step! (invalid data?)");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

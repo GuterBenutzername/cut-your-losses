@@ -17,12 +17,22 @@
     "react-perf/jsx-no-new-function-as-prop": "off",
     "jsx-a11y/label-has-associated-control": "off",
     "@typescript-eslint/no-magic-numbers": "off",
-    "max-statements": ["error", {"max": 20}],
+    "max-statements": ["error", { "max": 20 }],
     "no-param-reassign": "off",
     "putout/putout": "off",
     "import/exports-last": "off",
     "@typescript-eslint/consistent-type-assertions": "off",
     "@typescript-eslint/naming-convention": "off",
-    "@typescript-eslint/no-non-null-assertion": "off"
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/lines-around-comment": "off",
+    "unicorn/prevent-abbreviations": [
+      "error",
+      {
+        "replacements": {
+          "ref": false
+        }
+      }
+    ],
+    "max-params": ["error", { "max": 4 }]
   }
 }

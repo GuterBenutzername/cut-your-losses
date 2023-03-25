@@ -1,5 +1,5 @@
-import {StrictMode} from "react";
-import {createRoot} from "react-dom/client";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import { enablePatches } from "immer";
 
 import App from "./pages/App";
@@ -7,8 +7,10 @@ import App from "./pages/App";
 import "./index.css";
 
 enablePatches();
-createRoot(document.querySelector("#root")!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+if (typeof document !== "undefined") {
+  createRoot(document.querySelector("#root")!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+}

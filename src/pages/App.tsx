@@ -18,22 +18,52 @@ function arrayEquals(array1: unknown, array2: unknown) {
 }
 
 function App() {
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [state, setState] = useState<{ courses: Course[]; index: number }>({
+    courses: [],
+    index: 0,
+  });
   const [coursePatches, setCoursePatches] = useState<
     { undo: Patch[]; redo: Patch[] }[]
   >([]);
   const [currentVersion, setCurrentVersion] = useState<number>(-1);
-  const [courseIndex, setCourseIndex] = useState<number>(0);
   useEffect(() => {
-    setCourses(
-      (localStorage.getItem("courses") !== null && isCourseArray(JSON.parse(localStorage.getItem("courses")!)))
-        ? (JSON.parse(localStorage.getItem("courses")!) as Course[])
-        : ([])
-    );
+    if (
+      localStorage.getItem("state") !== null &&
+      typeof JSON.parse(localStorage.getItem("state")!) === "object" &&
+      Object.keys(JSON.parse(localStorage.getItem("state")!) as object)[0] ===
+        "courses" &&
+      Object.keys(JSON.parse(localStorage.getItem("state")!) as object)[1] ===
+        "index" &&
+      isCourseArray(
+        (
+          JSON.parse(localStorage.getItem("state")!) as {
+            courses: unknown;
+            index: unknown;
+          }
+        ).courses
+      ) &&
+      typeof (
+        JSON.parse(localStorage.getItem("state")!) as {
+          courses: Course[];
+          index: unknown;
+        }
+      ).index === "number"
+    ) {
+      setState(
+        JSON.parse(localStorage.getItem("state")!) as {
+          courses: Course[];
+          index: number;
+        }
+      );
+    } else {
+      setState({ courses: [], index: 0 });
+    }
   }, []);
   useEffect(() => {
-    localStorage.setItem("courses", JSON.stringify(courses));
-  }, [courses]);
+    if (state.courses.length > 0) {
+      localStorage.setItem("state", JSON.stringify(state));
+    }
+  }, [state]);
   function saveChanges(redo: Patch[], undo: Patch[]) {
     setCurrentVersion(currentVersion + 1);
     setCoursePatches(
@@ -85,68 +115,76 @@ function App() {
   }
 
   function onUndo() {
-    setCourses(applyPatches(courses, coursePatches[currentVersion].undo));
+    setState(applyPatches(state, coursePatches[currentVersion].undo));
     setCurrentVersion(currentVersion - 1);
   }
 
   function onRedo() {
-    setCourses(applyPatches(courses, coursePatches[currentVersion + 1].redo));
+    setState(applyPatches(state, coursePatches[currentVersion + 1].redo));
     setCurrentVersion(currentVersion + 1);
   }
 
   function onCreateCourse(name: string) {
     const nextState = produce(
-      courses,
+      state,
       (draft) => {
-        draft.unshift(new Course(name, []));
+        draft.courses.unshift(new Course(name, []));
+        draft.index = 0;
       },
       saveChanges
     );
-    setCourses(nextState);
-    setCourseIndex(0);
+    setState(nextState);
   }
 
   function onImportCourse(course: Course) {
     const nextState = produce(
-      courses,
+      state,
       (draft) => {
-        draft.unshift(course);
+        draft.courses.unshift(course);
+        draft.index = 0;
       },
       saveChanges
     );
-    setCourses(nextState);
-    setCourseIndex(0);
+    setState(nextState);
   }
 
   function onSwapCourse(index: number) {
-    setCourseIndex(index);
+    const nextState = produce(
+      state,
+      (draft) => {
+        draft.index = index;
+      },
+      saveChanges
+    );
+    setState(nextState);
   }
 
   function onDeleteCourse(index: number) {
     const nextState = produce(
-      courses,
+      state,
       (draft) => {
-        draft.splice(index, 1);
+        draft.courses.splice(index, 1);
+        if (draft.index > draft.courses.length - 1) {
+          draft.index = 0;
+        }
       },
       saveChanges
     );
-    setCourses(nextState);
-    if (courseIndex > courses.length - 2) {
-      setCourseIndex(0);
-    }
+    setState(nextState);
   }
 
   const currentCourse =
-    courses.length > 0 ? courses[courseIndex] : new Course("", []);
+    state.courses.length > 0 ? state.courses[state.index] : new Course("", []);
   function onModifyAssignment(
     event: { target: { value: string } },
     assignmentIndex: number,
     property: "future" | "grade" | "name" | "weight"
   ) {
     const nextCoursesState = produce(
-      courses,
+      state,
       (draft) => {
-        const toChange = draft[courseIndex]?.assignments[assignmentIndex];
+        const toChange =
+          draft.courses[draft.index]?.assignments[assignmentIndex];
 
         // Ensure no race conditions occur if this property is changed
         const isFuture = toChange.future;
@@ -187,43 +225,45 @@ function App() {
       },
       saveChangesOnModifyAssignment
     );
-    setCourses(nextCoursesState);
+    setState(nextCoursesState);
   }
 
   function onDeleteAssignment(assignmentIndex: number) {
     const nextCoursesState = produce(
-      courses,
+      state,
       (draft) => {
-        draft[courseIndex]?.assignments.splice(assignmentIndex, 1);
+        draft.courses[draft.index]?.assignments.splice(assignmentIndex, 1);
       },
       saveChanges
     );
-    setCourses(nextCoursesState);
+    setState(nextCoursesState);
   }
 
   function onAddAssignment() {
     const nextCoursesState = produce(
-      courses,
+      state,
       (draft) => {
-        draft[courseIndex]?.assignments.unshift(new Assignment("", 0, 0));
+        draft.courses[draft.index]?.assignments.unshift(
+          new Assignment("", 0, 0)
+        );
       },
       saveChanges
     );
-    setCourses(nextCoursesState);
+    setState(nextCoursesState);
   }
 
   return (
     <>
       <Sidebar
-        courses={courses}
-        currentCourse={courseIndex}
+        courses={state.courses}
+        currentCourse={state.index}
         onCreateCourse={onCreateCourse}
         onImportCourse={onImportCourse}
         onSwapCourse={onSwapCourse}
       />
       <ActionButtons
         onDeleteCourse={() => {
-          onDeleteCourse(courseIndex);
+          onDeleteCourse(state.index);
         }}
         onRedo={onRedo}
         onUndo={onUndo}
@@ -234,13 +274,40 @@ function App() {
           justify-content: center;
         `}
       >
-        {courses.length > 0 && (
+        {state.courses.length > 0 ? (
           <CourseTemplate
             course={currentCourse}
             onAddAssignment={onAddAssignment}
             onDeleteAssignment={onDeleteAssignment}
             onModifyAssignment={onModifyAssignment}
           />
+        ) : (
+          <div
+            className={css`
+              height: 80vh;
+              width: calc(100vw - 150px);
+              position: fixed;
+              left: 150px;
+              display: flex;
+              flex-flow: column nowrap;
+              justify-content: space-evenly;
+              align-items: center;
+              text-align: center;
+              font-weight: 600;
+              z-index: -1;
+            `}
+          >
+            <span>You don&apos;t have any courses!</span>
+            <p
+              className={css`
+                width: 75%;
+              `}
+            >
+              Click on the &quot;New Course&quot; button to create one, or click
+              on the &quot;Import Gradebook&quot; button to import directly from
+              your school&apos;s grading system (if supported).
+            </p>
+          </div>
         )}
       </div>
       <span
@@ -249,12 +316,13 @@ function App() {
           bottom: 0;
           width: 100vw;
           text-align: right;
+          padding-right: 4px;
           font-size: 0.7rem;
           color: #ddd;
           z-index: 2;
         `}
       >
-        Version 0.3.0 | © 2023 Adam Y. Cole II, founder of The Adam Co.
+        Version 0.3.1 | © 2023 Adam Y. Cole II, founder of The Adam Co.
       </span>
     </>
   );
