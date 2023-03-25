@@ -297,7 +297,6 @@ function App() {
             `}
           >
             <span>You don&apos;t have any courses!</span>
-
             <p
               className={css`
                 width: 75%;
@@ -316,12 +315,13 @@ function App() {
           bottom: 0;
           width: 100vw;
           text-align: right;
+          padding-right: 4px;
           font-size: 0.7rem;
           color: #ddd;
           z-index: 2;
         `}
       >
-        Version 0.3.0 | © 2023 Adam Y. Cole II, founder of The Adam Co.
+        Version 0.3.1 | © 2023 Adam Y. Cole II, founder of The Adam Co.
       </span>
     </>
   );
