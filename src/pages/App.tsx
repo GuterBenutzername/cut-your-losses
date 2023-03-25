@@ -7,6 +7,8 @@ import { Assignment } from "../Assignment";
 import CourseTemplate from "../organisms/course";
 import Sidebar from "../organisms/sidebar";
 import ActionButtons from "../atoms/actionButtons";
+import NoCoursesWarning from "../atoms/noCoursesWarning";
+import Footer from "../atoms/footer";
 
 function arrayEquals(array1: unknown, array2: unknown) {
   return (
@@ -172,9 +174,6 @@ function App() {
     );
     setState(nextState);
   }
-
-  const currentCourse =
-    state.courses.length > 0 ? state.courses[state.index] : new Course("", []);
   function onModifyAssignment(
     event: { target: { value: string } },
     assignmentIndex: number,
@@ -276,54 +275,16 @@ function App() {
       >
         {state.courses.length > 0 ? (
           <CourseTemplate
-            course={currentCourse}
+            course={state.courses[state.index]}
             onAddAssignment={onAddAssignment}
             onDeleteAssignment={onDeleteAssignment}
             onModifyAssignment={onModifyAssignment}
           />
         ) : (
-          <div
-            className={css`
-              height: 80vh;
-              width: calc(100vw - 150px);
-              position: fixed;
-              left: 150px;
-              display: flex;
-              flex-flow: column nowrap;
-              justify-content: space-evenly;
-              align-items: center;
-              text-align: center;
-              font-weight: 600;
-              z-index: -1;
-            `}
-          >
-            <span>You don&apos;t have any courses!</span>
-            <p
-              className={css`
-                width: 75%;
-              `}
-            >
-              Click on the &quot;New Course&quot; button to create one, or click
-              on the &quot;Import Gradebook&quot; button to import directly from
-              your school&apos;s grading system (if supported).
-            </p>
-          </div>
+          <NoCoursesWarning />
         )}
       </div>
-      <span
-        className={css`
-          position: fixed;
-          bottom: 0;
-          width: 100vw;
-          text-align: right;
-          padding-right: 4px;
-          font-size: 0.7rem;
-          color: #ddd;
-          z-index: 2;
-        `}
-      >
-        Version 0.3.1 | © 2023 Adam Y. Cole II, founder of The Adam Co.
-      </span>
+      <Footer />
     </>
   );
 }
