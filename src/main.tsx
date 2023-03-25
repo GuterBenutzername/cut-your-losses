@@ -7,8 +7,10 @@ import App from "./pages/App";
 import "./index.css";
 
 enablePatches();
-createRoot(document.querySelector("#root")!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+if (typeof document !== "undefined") {
+  createRoot(document.querySelector("#root")!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+}
