@@ -14,7 +14,6 @@ export class Assignment {
 
   public id: string;
 
-  // eslint-disable-next-line max-params
   public constructor(
     name: string,
     grade: number,
