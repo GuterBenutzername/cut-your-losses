@@ -27,36 +27,41 @@ function App() {
   >([]);
   const [currentVersion, setCurrentVersion] = useState<number>(-1);
   useEffect(() => {
-    setState(
+    if (
       localStorage.getItem("state") !== null &&
-        typeof JSON.parse(localStorage.getItem("state")!) === "object" &&
-        Object.keys(JSON.parse(localStorage.getItem("state")!) as object)[0] ===
-          "courses" &&
-        Object.keys(JSON.parse(localStorage.getItem("state")!) as object)[0] ===
-          "index" &&
-        isCourseArray(
-          (
-            JSON.parse(localStorage.getItem("state")!) as {
-              courses: unknown;
-              index: unknown;
-            }
-          ).courses
-        ) &&
-        typeof (
+      typeof JSON.parse(localStorage.getItem("state")!) === "object" &&
+      Object.keys(JSON.parse(localStorage.getItem("state")!) as object)[0] ===
+        "courses" &&
+      Object.keys(JSON.parse(localStorage.getItem("state")!) as object)[1] ===
+        "index" &&
+      isCourseArray(
+        (
           JSON.parse(localStorage.getItem("state")!) as {
-            courses: Course[];
+            courses: unknown;
             index: unknown;
           }
-        ).index === "number"
-        ? (JSON.parse(localStorage.getItem("state")!) as {
-            courses: Course[];
-            index: number;
-          })
-        : { courses: [], index: 0 }
-    );
+        ).courses
+      ) &&
+      typeof (
+        JSON.parse(localStorage.getItem("state")!) as {
+          courses: Course[];
+          index: unknown;
+        }
+      ).index === "number"
+    ) {
+      setState(
+        JSON.parse(localStorage.getItem("state")!) as {
+          courses: Course[];
+          index: number;
+        }
+      );
+    } else {
+      setState({ courses: [], index: 0 });
+    }
   }, []);
   useEffect(() => {
-    localStorage.setItem("courses", JSON.stringify(state));
+    if (state.courses.length > 0){
+    localStorage.setItem("state", JSON.stringify(state));}
   }, [state]);
   function saveChanges(redo: Patch[], undo: Patch[]) {
     setCurrentVersion(currentVersion + 1);
