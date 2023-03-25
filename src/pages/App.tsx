@@ -60,8 +60,9 @@ function App() {
     }
   }, []);
   useEffect(() => {
-    if (state.courses.length > 0){
-    localStorage.setItem("state", JSON.stringify(state));}
+    if (state.courses.length > 0) {
+      localStorage.setItem("state", JSON.stringify(state));
+    }
   }, [state]);
   function saveChanges(redo: Patch[], undo: Patch[]) {
     setCurrentVersion(currentVersion + 1);
