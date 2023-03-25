@@ -163,7 +163,7 @@ function checkForEdgeCases(array: Assignment[], weights: number[]) {
 
 // Get a weighted average of assignments with three different weight amounts
 export function weightedAverage(array: Assignment[], weights: number[]) {
-  if (!checkForEdgeCases(array, weights)) {
+  if (checkForEdgeCases(array, weights)) {
     return Number.NaN;
   }
   let [assignmentsWithWeightA, assignmentsWithWeightB, assignmentsWithWeightC] =
