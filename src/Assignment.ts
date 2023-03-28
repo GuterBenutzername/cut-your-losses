@@ -28,9 +28,6 @@ export class Assignment {
   }
 }
 
-function randselect(array: readonly string[]) {
-  return array[Math.floor(Math.random() * array.length)];
-}
 function isPartialAssignment(argument: unknown): argument is Assignment {
   return (
     argument !== null &&
@@ -91,16 +88,6 @@ function seperateArrayByWeights(
   ];
 }
 
-export function randConVowString(length: number) {
-  const cons = "bcdfghjklmnpqrstvwxyz".split("");
-  const vow = "aeiou".split("");
-  let newstr = "";
-  for (let index = 0; index < length / 2; index += 1) {
-    newstr += randselect(cons) + randselect(vow);
-  }
-  return newstr;
-}
-
 export function isAssignment(argument: unknown): argument is Assignment {
   return (
     isPartialAssignment(argument) &&
@@ -125,28 +112,6 @@ export function isAssignmentArray(argument: unknown): argument is Assignment[] {
     Array.isArray(argument) &&
     argument.every((element) => isAssignment(element))
   );
-}
-
-export function fakeAssignment(weights: readonly number[]): Assignment {
-  const randomNumber = Math.random();
-  return new Assignment(
-    randConVowString(6),
-    Math.round(-100 * randomNumber ** 2 + 100 * randomNumber + 75),
-    weights[Math.floor(Math.random() * weights.length)],
-    Math.random() > 0.85
-  );
-}
-
-export function fakeAssignmentArray(
-  weights: readonly number[],
-  length: number
-): Assignment[] {
-  const array = [];
-  for (let index = 0; index < length; index += 1) {
-    array.push(fakeAssignment(weights));
-  }
-
-  return array;
 }
 
 function checkForEdgeCases(array: Assignment[], weights: number[]) {
