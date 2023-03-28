@@ -1,6 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 import { immerable } from "immer";
 
+function hasDuplicates(array: unknown[]) {
+  return array.length !== new Set(array).size;
+}
+
 export class Assignment {
   public [immerable] = true;
 
@@ -121,7 +125,9 @@ function checkForEdgeCases(array: Assignment[], weights: number[]) {
     !array.every((element) => element.grade >= 0) ||
     // eslint-disable-next-line total-functions/no-partial-array-reduce
     weights.reduce((previous, current) => previous + current) > 1 ||
-    !weights.every((element) => element >= 0)
+    !weights.every((element) => element >= 0) ||
+    (weights.length === 3 && weights[0] + weights[1] + weights[2] < 1) ||
+    hasDuplicates(weights)
   );
 }
 
