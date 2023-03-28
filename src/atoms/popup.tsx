@@ -47,7 +47,6 @@ export default function Popup({
 
     if (isVisible) {
       setShouldDisplayNothing(false);
-      // eslint-disable-next-line sonarjs/elseif-without-else
     } else if (!shouldDisplayNothing) {
       setAnimationState(false);
       window.setTimeout(() => {

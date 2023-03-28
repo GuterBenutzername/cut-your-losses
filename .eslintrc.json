@@ -33,6 +33,7 @@
         }
       }
     ],
-    "max-params": ["error", { "max": 4 }]
+    "max-params": ["error", { "max": 4 }],
+    "sonarjs/elseif-without-else": "off"
   }
 }

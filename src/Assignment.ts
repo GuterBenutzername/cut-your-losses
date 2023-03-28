@@ -182,6 +182,12 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
     }
   }
 
+  if (weights.filter((value) => value !== 0).length === 2) {
+    weights[2] = 1 - weights[0] - weights[1];
+  } else if (weights.filter((value) => value !== 0).length < 2) {
+    return Number.NaN;
+  }
+
   const [ba, bc, ac] = solveAllForTwoWeights(weights);
 
   const placeholderText =
@@ -218,7 +224,6 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
       ),
     ];
   }
-
   return (
     Math.round(
       (gradeArrayAvg(assignmentsWithWeightA) * weights[0] +

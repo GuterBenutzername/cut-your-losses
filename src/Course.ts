@@ -103,7 +103,6 @@ export function importFromCisdCsv(importCsv: string) {
     assignments.forEach((assignment) => {
       if (assignment.grade === "Z") {
         assignment.grade = 0;
-        // eslint-disable-next-line sonarjs/elseif-without-else
       } else if (assignment.grade === "-") {
         assignment.grade = 0;
         assignment.future = true;
