@@ -196,6 +196,17 @@ export default function Popups({
                 onChange={(event) => {
                   setImportSchoolName(event.target.value);
                 }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    onImportSchoolCsv(
+                      district,
+                      importSchoolData,
+                      importSchoolName
+                    );
+                    setIsImportSchoolOpen(false);
+                    setImportSchoolData("");
+                  }
+                }}
                 value={importSchoolName}
               />
             </span>
