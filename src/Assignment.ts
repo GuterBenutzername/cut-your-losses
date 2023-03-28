@@ -168,18 +168,14 @@ export function weightedAverage(array: Assignment[], weights: number[]) {
   let [assignmentsWithWeightA, assignmentsWithWeightB, assignmentsWithWeightC] =
     seperateArrayByWeights(array, weights);
   switch (0) {
-    case assignmentsWithWeightB.length + assignmentsWithWeightC.length: {
+    case assignmentsWithWeightB.length + assignmentsWithWeightC.length:
       return gradeArrayAvg(assignmentsWithWeightA);
-    }
-    case assignmentsWithWeightA.length + assignmentsWithWeightC.length: {
+    case assignmentsWithWeightA.length + assignmentsWithWeightC.length:
       return gradeArrayAvg(assignmentsWithWeightB);
-    }
-    case assignmentsWithWeightB.length + assignmentsWithWeightA.length: {
+    case assignmentsWithWeightB.length + assignmentsWithWeightA.length:
       return gradeArrayAvg(assignmentsWithWeightC);
-    }
-    default: {
+    default:
       break;
-    }
   }
 
   if (weights.filter((value) => value !== 0).length === 2) {
@@ -249,3 +245,4 @@ export function addIds(data: readonly unknown[]) {
     throw new Error("Import failed during parsing step! (invalid data?)");
   }
 }
+

@@ -188,38 +188,31 @@ function App() {
         // Ensure no race conditions occur if this property is changed
         const isFuture = toChange.future;
         switch (property) {
-          case "name": {
+          case "name":
             toChange.name = event.target.value;
             break;
-          }
 
-          case "weight": {
-            if (
-              Number(event.target.value) <= 1 &&
-              Number(event.target.value) >= 0
-            ) {
+          case "weight":
+            if (Number(event.target.value) <= 1 &&
+            Number(event.target.value) >= 0) {
               toChange.weight = Number(event.target.value);
             }
 
             break;
-          }
 
-          case "grade": {
+          case "grade":
             if (Number(event.target.value) >= 0) {
               toChange.grade = Number(event.target.value);
             }
 
             break;
-          }
 
-          case "future": {
+          case "future":
             toChange.future = !isFuture;
             break;
-          }
 
-          default: {
+          default:
             break;
-          }
         }
       },
       saveChangesOnModifyAssignment
@@ -290,3 +283,4 @@ function App() {
 }
 
 export default App;
+

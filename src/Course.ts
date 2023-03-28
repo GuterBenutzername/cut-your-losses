@@ -109,23 +109,19 @@ export function importFromCisdCsv(importCsv: string) {
       }
 
       switch (assignment.weight) {
-        case "Major": {
+        case "Major":
           assignment.weight = 0.6;
           break;
-        }
-        case "Quiz": {
+        case "Quiz":
           assignment.weight = 0.25;
           break;
-        }
-        case "Daily": {
+        case "Daily":
           assignment.weight = 0.15;
           break;
-        }
-        default: {
+        default:
           throw new Error(
             "Import failed during conversion step (invalid weight value)!"
           );
-        }
       }
     });
     return addIds(assignments);
@@ -133,3 +129,4 @@ export function importFromCisdCsv(importCsv: string) {
 
   throw new Error("Import failed during parsing step! (invalid data?)");
 }
+

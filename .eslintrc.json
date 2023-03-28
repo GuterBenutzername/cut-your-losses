@@ -9,22 +9,35 @@
     "browser": true
   },
   "rules": {
+    // noUncheckedIndexAccess in TypeScript is flakey at best, so it's not worth enforcing it.
     "total-functions/require-strict-mode": "off",
+    // Don't error on formatting problems because that's actually stupid.
     "prettier/prettier": "off",
+    // This rule is extremely dumb in the sense that most modules that are used aren't detected as used
     "import/no-unused-modules": "off",
+    // I don't know how to make this rule happy
     "react/jsx-no-bind": "off",
-    "@typescript-eslint/prefer-readonly-parameter-types": "off",
+    // See above
     "react-perf/jsx-no-new-function-as-prop": "off",
+    // TypeScript only allows readonly on Arrays, Sets, Objects, etc., but this rule expects all parameters to be readonly
+    "@typescript-eslint/prefer-readonly-parameter-types": "off",
+    // This rule doesn't account for dynamic rendering/ids
     "jsx-a11y/label-has-associated-control": "off",
+    // District import requires specific constants that are quite magical.
     "@typescript-eslint/no-magic-numbers": "off",
-    "max-statements": ["error", { "max": 20 }],
+    // The entire point of Immer is that you can reassign a parameter with no adverse effects.
     "no-param-reassign": "off",
-    "putout/putout": "off",
+    // This rule contradicts "define-before-use"
     "import/exports-last": "off",
+    // This rule makes no sense to me
     "@typescript-eslint/consistent-type-assertions": "off",
+    // There are multiple situations where not using strictCamelCase is good code standard.
     "@typescript-eslint/naming-convention": "off",
+    // I don't know why this rule exists
     "@typescript-eslint/no-non-null-assertion": "off",
+    // This rule conflicts with prettier.
     "@typescript-eslint/lines-around-comment": "off",
+    // Ref is a idiomatic abbreviation
     "unicorn/prevent-abbreviations": [
       "error",
       {
@@ -33,7 +46,13 @@
         }
       }
     ],
+    // There are multiple situations where we need 4 parameters
     "max-params": ["error", { "max": 4 }],
-    "sonarjs/elseif-without-else": "off"
+    // This rule conflicts with no-empty
+    "sonarjs/elseif-without-else": "off",
+    // Multiple complexity rules handle this more thoroughly
+    "max-statements": "off",
+    // This rule conflicts with putout, and I prefer the brace-less syntax
+    "unicorn/switch-case-braces": "off"
   }
 }

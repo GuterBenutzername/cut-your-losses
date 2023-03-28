@@ -1,5 +1,4 @@
 /* eslint-disable @shopify/jsx-prefer-fragment-wrappers */
-/* eslint-disable max-statements */
 import { css, cx } from "@emotion/css";
 
 import { type Assignment, weightedAverage } from "../Assignment";
@@ -33,8 +32,9 @@ export default function Averages({
   }
 
   if (weights.length < 3) {
-    // eslint-disable-next-line unicorn/no-new-array
-    weights = weights.concat(new Array(3).fill(0)).slice(0, 3);
+    // This rule conflicts with putout and I personally prefer this syntax.
+    // eslint-disable-next-line unicorn/new-for-builtins
+    weights = weights.concat(Array(3).fill(0)).slice(0, 3);
   }
 
   let realAverage = weightedAverage(
@@ -154,3 +154,4 @@ export default function Averages({
     </div>
   );
 }
+
