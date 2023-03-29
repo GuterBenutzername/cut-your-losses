@@ -29,6 +29,7 @@ export default function ActionButtons({
         display: flex;
         justify-content: flex-end;
         align-items: center;
+        z-index: -1;
       `}
     >
       <button

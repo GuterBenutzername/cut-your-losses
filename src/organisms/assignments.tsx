@@ -47,6 +47,7 @@ export default function Assignments({
         align-items: center;
         gap: 6px;
         width: 100%;
+        z-index: -1;
       `}
     >
       {assignments.map((assignment, index) => (

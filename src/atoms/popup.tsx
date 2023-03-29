@@ -10,7 +10,7 @@ const containerStyle = css`
   height: 100vh;
   justify-content: center;
   align-items: center;
-  z-index: 99;
+  z-index: 9999;
 `;
 
 export default function Popup({
@@ -65,7 +65,7 @@ export default function Popup({
     border-radius: 5px;
     margin: 20px;
     box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
-    z-index: 100;
+    z-index: 10000;
     transition: 100ms;
     opacity: ${animationState ? 1 : 0};
     transform: ${animationState ? "scale(1)" : "scale(0.9)"};

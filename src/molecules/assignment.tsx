@@ -52,9 +52,11 @@ function AssignmentCard({
         height: 2rem;
         padding: 0;
         border: solid 2px #000;
+        z-index: -1;
         border-radius: 2px;
         @media only screen and (max-width: 600px) {
           display: flex;
+          z-index: -1;
           flex-flow: row nowrap;
           justify-content: space-around;
           align-items: center;

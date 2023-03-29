@@ -111,7 +111,7 @@ export default function Averages({
         position: sticky;
         top: 0;
         justify-content: space-evenly;
-        z-index: 1;
+        z-index: -1;
         background-color: #fff;
         align-self: flex-start;
         flex-wrap: wrap;

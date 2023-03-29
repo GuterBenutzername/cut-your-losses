@@ -16,6 +16,7 @@ const primaryViewStyle = css`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  z-index: -1;
 
   @media only screen and (max-width: 600px) {
     width: 100vw;
@@ -26,6 +27,7 @@ const primaryViewStyle = css`
     padding: 4px;
     padding-top: 0;
     display: flex;
+    z-index: -1;
   }
 `;
 

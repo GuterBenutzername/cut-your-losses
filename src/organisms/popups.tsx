@@ -44,7 +44,7 @@ export default function Popups({
           position: fixed;
           right: 50%;
           top: 50%;
-          z-index: 100;
+          z-index: 999
         `}
       >
         <Popup

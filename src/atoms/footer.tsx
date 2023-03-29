@@ -11,7 +11,7 @@ export default function Footer() {
         padding-right: 4px;
         font-size: 0.7rem;
         color: #ddd;
-        z-index: 2;
+        z-index: -1;
       `}
     >
       Version 0.3.1 | © 2023 Adam Y. Cole II, founder of The Adam Co.
