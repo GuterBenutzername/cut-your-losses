@@ -105,7 +105,7 @@ describe.concurrent("weightedAverage", () => {
       )
     ).toBe(100);
   });
-  it("returns a correct weighted average with two weights", () => {
+  it("returns a correct weighted average with two weights that add to 1", () => {
     expect(
       weightedAverage(
         [new Assignment("A", 100, 0.2), new Assignment("B", 0, 0.8)],
@@ -124,6 +124,32 @@ describe.concurrent("weightedAverage", () => {
         [0.2, 0.8]
       )
     ).toBe(60);
+  });
+  it("returns a correct weighted average with two weights that don't add to 1", () => {
+    expect(
+      weightedAverage(
+        [new Assignment("A", 100, 0.6), new Assignment("B", 0, 0.2)],
+        [0.6, 0.2]
+      )
+    ).toBe(75);
+    expect(
+      weightedAverage(
+        [new Assignment("A", 0, 0.6), new Assignment("B", 0, 0.2)],
+        [0.6, 0.2]
+      )
+    ).toBe(0);
+    expect(
+      weightedAverage(
+        [new Assignment("A", 50, 0.25), new Assignment("B", 25, 0.35)],
+        [0.25, 0.35]
+      )
+    ).toBe(Math.round((425 / 12) * 100) / 100);
+    expect(
+      weightedAverage(
+        [new Assignment("A", 89, 0.25), new Assignment("B", 72, 0.15)],
+        [0.15, 0.25]
+      )
+    ).toBe(Math.round((661 / 8) * 100) / 100);
   });
   it("returns a correct weighted average with three weights", () => {
     expect(
