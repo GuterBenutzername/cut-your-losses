@@ -2,13 +2,7 @@ import { parse } from "papaparse";
 import { immerable } from "immer";
 import { v4 as uuidv4 } from "uuid";
 
-import {
-  type Assignment,
-  isAssignmentArray,
-  randConVowString,
-  fakeAssignmentArray,
-  addIds,
-} from "./Assignment";
+import { type Assignment, isAssignmentArray, addIds } from "./Assignment";
 
 export class Course {
   public [immerable] = true;
@@ -44,13 +38,6 @@ export function isCourseArray(argument: unknown): argument is Course[] {
     argument !== null &&
     Array.isArray(argument) &&
     argument.every((element) => isCourse(element))
-  );
-}
-
-export function fakeCourse(assignmentsLength: number) {
-  return new Course(
-    randConVowString(6),
-    fakeAssignmentArray([0.6, 0.25, 0.15], assignmentsLength)
   );
 }
 
