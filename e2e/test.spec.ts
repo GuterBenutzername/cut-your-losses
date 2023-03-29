@@ -107,11 +107,15 @@ test("ensure error shows up when there are no courses", async ({ page }) => {
   await page.getByRole("button", { name: "New Course" }).click();
   await page.getByLabel("Course Name").fill("Test A");
   await page.getByLabel("Course Name").press("Enter");
-  await expect(page.getByText(/You don't have any courses!/u)).not.toBeVisible();
+  await expect(
+    page.getByText(/You don't have any courses!/u)
+  ).not.toBeVisible();
   await page.getByRole("button", { name: "New Course" }).click();
   await page.getByLabel("Course Name").fill("Test B");
   await page.getByLabel("Course Name").press("Enter");
-  await expect(page.getByText(/You don't have any courses!/u)).not.toBeVisible();
+  await expect(
+    page.getByText(/You don't have any courses!/u)
+  ).not.toBeVisible();
   await page.getByRole("button", { name: "delete" }).click({ clickCount: 2 });
   await expect(page.getByText(/You don't have any courses!/u)).toBeVisible();
 });

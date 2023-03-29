@@ -2,11 +2,7 @@ import { parse } from "papaparse";
 import { immerable } from "immer";
 import { v4 as uuidv4 } from "uuid";
 
-import {
-  type Assignment,
-  isAssignmentArray,
-  addIds,
-} from "./Assignment";
+import { type Assignment, isAssignmentArray, addIds } from "./Assignment";
 
 export class Course {
   public [immerable] = true;

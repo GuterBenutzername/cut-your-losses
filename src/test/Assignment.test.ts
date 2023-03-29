@@ -147,14 +147,14 @@ describe.concurrent("weightedAverage", () => {
       )
     ).toBe(80);
     expect(
-        weightedAverage(
-          [
-            new Assignment("A", 50, 0.1),
-            new Assignment("B", 50, 0.6),
-            new Assignment("C", 50, 0.3),
-          ],
-          [0.1, 0.6, 0.3]
-        )
-      ).toBe(50);
+      weightedAverage(
+        [
+          new Assignment("A", 50, 0.1),
+          new Assignment("B", 50, 0.6),
+          new Assignment("C", 50, 0.3),
+        ],
+        [0.1, 0.6, 0.3]
+      )
+    ).toBe(50);
   });
 });
