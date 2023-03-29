@@ -1,4 +1,3 @@
-/* eslint-disable max-statements */
 import { test, expect } from "@playwright/test";
 
 test("check that all basic functions are working", async ({ page }) => {
