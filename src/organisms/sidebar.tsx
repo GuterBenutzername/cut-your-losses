@@ -130,15 +130,13 @@ export default function Sidebar({
 
     // eslint-disable-next-line sonarjs/no-small-switch
     switch (district) {
-      case "CISD": {
+      case "CISD":
         onImportCourse(
           new Course(importSchoolName, importFromCisdCsv(importSchoolData))
         );
         break;
-      }
-      default: {
+      default:
         throw new Error("This errror should not occur or exist");
-      }
     }
   }
 

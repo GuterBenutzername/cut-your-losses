@@ -126,7 +126,8 @@ function checkForEdgeCases(array: Assignment[], weights: number[]) {
     // eslint-disable-next-line total-functions/no-partial-array-reduce
     weights.reduce((previous, current) => previous + current) > 1 ||
     !weights.every((element) => element >= 0) ||
-    (weights.filter((value) => value !== 0).length === 3 && weights[0] + weights[1] + weights[2] < 1) ||
+    (weights.filter((value) => value !== 0).length === 3 &&
+      weights[0] + weights[1] + weights[2] < 1) ||
     hasDuplicates(weights.filter((value) => value !== 0))
   );
 }
@@ -216,4 +217,3 @@ export function addIds(data: readonly unknown[]) {
     throw new Error("Import failed during parsing step! (invalid data?)");
   }
 }
-

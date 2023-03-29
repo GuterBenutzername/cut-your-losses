@@ -116,4 +116,3 @@ export function importFromCisdCsv(importCsv: string) {
 
   throw new Error("Import failed during parsing step! (invalid data?)");
 }
-
