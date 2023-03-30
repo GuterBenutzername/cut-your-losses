@@ -1,3 +1,4 @@
+// If you use an IDE with syntax checking turned on, please open this file as JSON with Comments (JSONC)
 {
   "extends": ["hardcore", "hardcore/react", "hardcore/ts"],
 
@@ -46,8 +47,6 @@
         }
       }
     ],
-    // There are multiple situations where we need 4 parameters
-    "max-params": ["error", { "max": 4 }],
     // This rule conflicts with no-empty
     "sonarjs/elseif-without-else": "off",
     // Multiple complexity rules handle this more thoroughly
