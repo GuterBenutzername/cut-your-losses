@@ -1,12 +1,21 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import "./index.css";
+import Dashboard from "./pages/Dashboard";
+import Grades from "./pages/Grades";
+import Calculators from "./pages/Calculators";
 
 const router = createBrowserRouter([
+  { path: "/", element: <Dashboard /> },
   {
-    path: "/",
-    element: <div>Hello world!</div>,
+    path: "/grades",
+    element: <Grades />,
+  },
+  {
+    path: "/calculators",
+    element: <Calculators />,
   },
 ]);
 if (typeof document !== "undefined") {

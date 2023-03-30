@@ -1,8 +1,7 @@
 import { create } from "zustand";
 
 const usePrimaryStore = create(() => ({
-    helloWorld: "Hello, World!"
+  helloWorld: "Hello, World!",
 }));
-
 
 export default usePrimaryStore;
