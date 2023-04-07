@@ -1,4 +1,8 @@
+import { v4 as uuidv4 } from "uuid";
+
 export default class Assignment {
+  public id = uuidv4();
+
   public name: string;
 
   public grade: number;
