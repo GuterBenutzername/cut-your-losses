@@ -52,6 +52,8 @@
     // Multiple complexity rules handle this more thoroughly
     "max-statements": "off",
     // This rule conflicts with putout, and I prefer the brace-less syntax
-    "unicorn/switch-case-braces": "off"
+    "unicorn/switch-case-braces": "off",
+    // This rule is inconsistant at best and downright wrong at worst.
+    "import/no-extraneous-dependencies": "off"
   }
 }
