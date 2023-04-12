@@ -1,7 +1,9 @@
-import styled, { css } from "styled-components";
-import { NumericFormat } from "react-number-format";
-
 import type Assignment from "../Assignment";
+import {
+  DeleteButton,
+  NameGradeInput,
+  WeightInput,
+} from "../atoms/StyledComponents";
 
 function blurTarget(event: React.SyntheticEvent<HTMLButtonElement>) {
   const target = event.target as HTMLButtonElement;
@@ -9,49 +11,8 @@ function blurTarget(event: React.SyntheticEvent<HTMLButtonElement>) {
   target.disabled = false;
 }
 
-const inputStyle = css`
-  border-radius: 3px;
-  border: #000 solid 0.5px;
-  width: 25vw;
-
-  &:focus {
-    outline: none;
-    box-shadow: inset 0 0 0 1px #000;
-  }
-`;
-
-const NameGradeInput = styled.input`
-  ${inputStyle}
-`;
-
-const WeightInput = styled(NumericFormat)`
-  ${inputStyle}
-`;
-
-const DeleteButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 2px;
-  height: 34px;
-  width: 34px;
-  border: none;
-  border-radius: 100%;
-
-  &:hover,
-  &:focus {
-    background-color: #f44336;
-    color: white;
-    cursor: pointer;
-  }
-
-  &:active {
-    background-color: #d32f2f;
-  }
-`;
-
 const DeleteIcon = (
-  <svg height="20" viewBox="0 0 448 512" width="20">
+  <svg height="18" viewBox="0 0 448 512" width="18">
     <path d="m170.5 40-19 40h145l-19-40H177.1Zm147-40 36.7 80H424c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8v304c-1 83-1 83-88 83H100c-68 0-68 0-68-83V128h-8c-13.3 0-24-10.7-24-24s10.7-24 24-24h69.8L132 0h142ZM80 128v304c0 17.7 14.3 32 32 32h224c17.7 0 32-14.3 32-32V128H80Zm80 64v208h-32V192h32Zm80 0v208h-32V192Zm80 0v208h-32V192Z" />
   </svg>
 );
@@ -60,15 +21,22 @@ function AssignmentItem({
   assignment,
   index,
   modifyAssignment,
+  deleteAssignment,
+  autoFocus = undefined,
 }: {
   assignment: Assignment;
   index: number;
   modifyAssignment: (assignment: Assignment, index: number) => void;
+  deleteAssignment: (index: number) => void;
+  autoFocus: "grade" | "name" | "weight" | undefined;
 }) {
   return (
     <tr>
       <td>
         <DeleteButton
+          onClick={() => {
+            deleteAssignment(index);
+          }}
           onDragExit={blurTarget}
           onMouseLeave={blurTarget}
           onPointerLeave={blurTarget}
@@ -79,6 +47,7 @@ function AssignmentItem({
       </td>
       <td>
         <NameGradeInput
+          autoFocus={autoFocus === "name"}
           onChange={(event) => {
             modifyAssignment(
               {
@@ -94,6 +63,7 @@ function AssignmentItem({
       </td>
       <td>
         <NameGradeInput
+          autoFocus={autoFocus === "grade"}
           min="0"
           onChange={(event) => {
             if (Number.isNaN(Number.parseFloat(event.target.value))) {
@@ -114,7 +84,7 @@ function AssignmentItem({
                   ...assignment,
                   grade: Number.parseFloat(event.target.value),
                 },
-                0
+                index
               );
             }
           }}
@@ -126,6 +96,7 @@ function AssignmentItem({
       <td>
         <WeightInput
           allowNegative={false}
+          autoFocus={autoFocus === "weight"}
           isAllowed={({ floatValue }) =>
             floatValue === undefined
               ? true
