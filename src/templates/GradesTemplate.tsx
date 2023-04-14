@@ -132,7 +132,10 @@ function GradesTemplate() {
                 deleteAssignment={state.deleteAssignment}
                 index={index}
                 key={assignment.id}
-                modifyAssignment={state.modifyAssignment}
+                modifyAssignment={(assignmentParameter, indexParameter) => {
+                  setAutoFocus(undefined);
+                  state.modifyAssignment(assignmentParameter, indexParameter)
+                }}
               />
             ))}
         </tbody>
