@@ -14,7 +14,9 @@ const GradesWrapper = styled.div`
   justify-content: center;
   gap: 88px;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
+  margin-left: 4px;
+  margin-right: 4px;
 `;
 
 const Average = styled.div`
@@ -93,7 +95,7 @@ function GradesTemplate() {
                   setAutoFocus("name");
                 }}
                 type="text"
-              value=""
+                value=""
               />
             </td>
             <td>
@@ -104,7 +106,7 @@ function GradesTemplate() {
                     new Assignment("", Number.parseFloat(event.target.value))
                   );
                   setAutoFocus("grade");
-                  _setGrade("")
+                  _setGrade("");
                 }}
                 step="1"
                 type="number"
@@ -134,7 +136,7 @@ function GradesTemplate() {
                 key={assignment.id}
                 modifyAssignment={(assignmentParameter, indexParameter) => {
                   setAutoFocus(undefined);
-                  state.modifyAssignment(assignmentParameter, indexParameter)
+                  state.modifyAssignment(assignmentParameter, indexParameter);
                 }}
               />
             ))}

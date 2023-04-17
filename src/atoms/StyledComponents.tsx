@@ -4,7 +4,7 @@ import { NumericFormat } from "react-number-format";
 const inputStyle = css`
   border-radius: 3px;
   border: #000 solid 0.5px;
-  width: 25vw;
+  width: 15vw;
   max-width: 250px;
   height: 38px;
 
