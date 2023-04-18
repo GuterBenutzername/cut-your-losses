@@ -49,7 +49,7 @@ function GradesTemplate() {
   const [_grade, _setGrade] = useState("");
   // eslint-disable-next-line no-underscore-dangle, react/hook-use-state
   const [_weight, _setWeight] = useState("");
-  const { assignments } = state.courses[state.currentCourse];
+  const assignments = state.courses[state.currentCourse]?.assignments;
   const [autoFocus, setAutoFocus] = useState<
     "grade" | "name" | "weight" | undefined
   >();
@@ -60,10 +60,11 @@ function GradesTemplate() {
           Your average in <i>{state.courses[state.currentCourse].name}</i> is:
         </AverageText>
         <AverageNumber>
-          {getAverageOfAssignments(assignments).toLocaleString("en-US", {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2,
-          })}
+          {Boolean(assignments) &&
+            getAverageOfAssignments(assignments).toLocaleString("en-US", {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2,
+            })}
         </AverageNumber>
       </Average>
       <table>
@@ -126,7 +127,8 @@ function GradesTemplate() {
               />
             </td>
           </tr>
-          {assignments.length > 0 &&
+          {Boolean(assignments) &&
+            assignments.length > 0 &&
             assignments.map((assignment, index) => (
               <AssignmentItem
                 assignment={assignment}
