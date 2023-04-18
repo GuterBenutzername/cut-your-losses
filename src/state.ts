@@ -18,6 +18,7 @@ const usePrimaryStore = create<PrimaryStore>((set) => ({
     new Course("dkas"),
     new Course("deez nuts"),
   ] as Course[],
+
   currentCourse: 0,
 
   modifyAssignment: (assignment: Assignment, index: number) => {
