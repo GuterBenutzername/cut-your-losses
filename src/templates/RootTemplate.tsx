@@ -76,9 +76,9 @@ const CourseButton = styled.button`
   width: 100%;
   text-align: left;
   background-color: ${(properties: { isactive: boolean }) =>
-    properties.isactive ? "#545f75" : "#4a5466"};
+    properties.isactive ? "#5b7485" : "#4a5466"};
   &:hover {
-    background-color: #545f74;
+    background-color: #5b7485;
   }
 `;
 
