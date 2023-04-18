@@ -1,5 +1,7 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import styled from "styled-components";
+
+import usePrimaryStore from "../state";
 
 const OutletWrapper = styled.div`
   display: flex;
@@ -34,7 +36,8 @@ const SidebarLink = styled(NavLink)`
   display: flex;
   gap: 8px;
   padding-left: 10px;
-  background-color: #434c5e;
+  background-color: ${(properties: { isactive: boolean }) =>
+    properties.isactive ? "#545f75" : "#434c5e"};
   color: white;
   border: 0;
   height: 48px;
@@ -43,10 +46,6 @@ const SidebarLink = styled(NavLink)`
   font-weight: 500;
   text-decoration: none;
   &:hover {
-    background-color: #545f75;
-  }
-  &[class*="active"] {
-    /* react-router's styling methods make no sense */
     background-color: #545f75;
   }
 `;
@@ -61,7 +60,31 @@ const Header = styled.div`
   color: #88c0d0;
 `;
 
+const Courses = styled.ul`
+  position: relative;
+  top: -16px;
+  list-style-type: none;
+  color: #fff;
+  margin: 0;
+  background-color: #4a5466;
+`;
+
+const CourseButton = styled.button`
+  border: none;
+  padding: none;
+  margin: none;
+  width: 100%;
+  text-align: left;
+  background-color: ${(properties: { isactive: boolean }) =>
+    properties.isactive ? "#545f75" : "#4a5466"};
+  &:hover {
+    background-color: #545f74;
+  }
+`;
+
 function RootTemplate() {
+  const { pathname } = useLocation();
+  const state = usePrimaryStore();
   return (
     <RootWrapper>
       <SidebarWrapper>
@@ -73,7 +96,7 @@ function RootTemplate() {
             width={100}
           />
         </Header>
-        <SidebarLink to="/dashboard">
+        <SidebarLink isactive={pathname === "/dashboard"} to="/dashboard">
           <svg
             fill="none"
             height="21"
@@ -90,7 +113,7 @@ function RootTemplate() {
           </svg>
           <span>Dashboard</span>
         </SidebarLink>
-        <SidebarLink to="/grades">
+        <SidebarLink isactive={pathname === "/grades"} to="/grades">
           <svg
             fill="none"
             height="23"
@@ -105,7 +128,24 @@ function RootTemplate() {
           </svg>
           <span>Grades</span>
         </SidebarLink>
-        <SidebarLink to="/calculators">
+        {pathname === "/grades" && (
+          <Courses>
+            {state.courses.map((course, index) => (
+              <li key={course.id}>
+                <CourseButton
+                  isactive={index === state.currentCourse}
+                  onClick={() => {
+                    state.setCurrentCourse(index);
+                  }}
+                  type="button"
+                >
+                  {course.name}
+                </CourseButton>
+              </li>
+            ))}
+          </Courses>
+        )}
+        <SidebarLink isactive={pathname === "/calculators"} to="/calculators">
           <svg
             fill="none"
             height="23"
