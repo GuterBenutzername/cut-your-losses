@@ -10,14 +10,13 @@ interface PrimaryStore {
   deleteAssignment: (index: number) => void;
   pushAssignment: (assignment: Assignment) => void;
   setCurrentCourse: (index: number) => void;
+  modifyCourse: (course: Course, index: number) => void;
+  pushCourse: (course: Course) => void;
+  deleteCourse: (index: number) => void;
 }
 
 const usePrimaryStore = create<PrimaryStore>((set) => ({
-  courses: [
-    new Course("xfliajsd"),
-    new Course("dkas"),
-    new Course("deez nuts"),
-  ] as Course[],
+  courses: [new Course("Test"), new Course("Test")] as Course[],
 
   currentCourse: 0,
 
@@ -47,6 +46,30 @@ const usePrimaryStore = create<PrimaryStore>((set) => ({
 
   setCurrentCourse: (currentCourse: number) => {
     set(() => ({ currentCourse }));
+  },
+
+  modifyCourse: (course: Course, index: number) => {
+    set(({ courses }) => {
+      courses[index] = course;
+      return { courses };
+    });
+  },
+
+  pushCourse: (course: Course) => {
+    set(({ courses }) => {
+      courses.push(course);
+      return { courses };
+    });
+  },
+
+  deleteCourse: (index: number) => {
+    set(({ courses, currentCourse }) => {
+      courses.splice(index, 1);
+      if (currentCourse > courses.length - 1) {
+        currentCourse -= 1;
+      }
+      return { courses, currentCourse };
+    });
   },
 }));
 

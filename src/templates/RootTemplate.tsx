@@ -1,7 +1,9 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { useState } from "react";
 
 import usePrimaryStore from "../state";
+import Course from "../Course";
 
 const OutletWrapper = styled.div`
   display: flex;
@@ -69,22 +71,64 @@ const Courses = styled.ul`
   background-color: #4a5466;
 `;
 
-const CourseButton = styled.button`
+const CourseStyle = css`
   border: none;
-  padding: none;
   margin: none;
   width: 100%;
   text-align: left;
   background-color: ${(properties: { isactive: boolean }) =>
     properties.isactive ? "#5b7485" : "#4a5466"};
+`;
+
+const CourseButton = styled.button`
+  ${CourseStyle}
+
   &:hover {
     background-color: #5b7485;
+  }
+`;
+
+const CourseInput = styled.input`
+  ${CourseStyle}
+  &:focus {
+    outline: none;
+    box-shadow: inset 0px 0px 0px 1px #fff;
+  }
+`;
+
+const CourseRow = styled.span`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const DeleteButton = styled.button`
+  border: none;
+  z-index: 2;
+  height: 24px;
+  width: 24px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+
+  &:hover,
+  &:focus {
+    background-color: #f44336;
+    color: white;
+    cursor: pointer;
+  }
+
+  &:active {
+    background-color: #d32f2f;
   }
 `;
 
 function RootTemplate() {
   const { pathname } = useLocation();
   const state = usePrimaryStore();
+  const [shouldFocus, setShouldFocus] = useState(false);
   return (
     <RootWrapper>
       <SidebarWrapper>
@@ -132,17 +176,74 @@ function RootTemplate() {
           <Courses>
             {state.courses.map((course, index) => (
               <li key={course.id}>
-                <CourseButton
-                  isactive={index === state.currentCourse}
-                  onClick={() => {
-                    state.setCurrentCourse(index);
-                  }}
-                  type="button"
-                >
-                  {course.name}
-                </CourseButton>
+                {course.editing ? (
+                  <CourseInput
+                    isactive={index === state.currentCourse}
+                    onBlur={() => {
+                      state.modifyCourse({ ...course, editing: false }, index);
+                    }}
+                    onChange={(event) => {
+                      state.modifyCourse(
+                        { ...course, name: event.target.value.slice(2) },
+                        index
+                      );
+                    }}
+                    onClick={() => {
+                      state.setCurrentCourse(index);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        (event.target as HTMLInputElement).blur();
+                      }
+                    }}
+                    onMouseEnter={(event) => {
+                      if (shouldFocus) {
+                        (event.target as HTMLInputElement).focus();
+                        setShouldFocus(false);
+                      }
+                    }}
+                    value={`> ${course.name}`}
+                  />
+                ) : (
+                  <CourseButton
+                    isactive={index === state.currentCourse}
+                    onClick={() => {
+                      if (index === state.currentCourse) {
+                        setShouldFocus(true);
+                        state.modifyCourse({ ...course, editing: true }, index);
+                      }
+                      state.setCurrentCourse(index);
+                    }}
+                    type="button"
+                  >
+                    <CourseRow>
+                      <span>{`> ${course.name}`}</span>
+                      <DeleteButton
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          state.deleteCourse(index);
+                        }}
+                      >
+                        X
+                      </DeleteButton>
+                    </CourseRow>
+                  </CourseButton>
+                )}
               </li>
             ))}
+            <li>
+              <CourseButton
+                isactive={false}
+                onClick={() => {
+                  setShouldFocus(true);
+                  state.pushCourse(new Course("", [], true));
+                  state.setCurrentCourse(state.courses.length - 1);
+                }}
+                type="button"
+              >
+                +
+              </CourseButton>
+            </li>
           </Courses>
         )}
         <SidebarLink isactive={pathname === "/calculators"} to="/calculators">

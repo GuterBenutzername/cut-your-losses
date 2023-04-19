@@ -35,6 +35,15 @@ const AverageText = styled.span`
   font-weight: 500;
 `;
 
+const CourseName = styled.button`
+  border: none;
+`;
+
+const CourseInput = styled.input`
+  width: 20vw;
+  border: none;
+`;
+
 const PlusIconWrapper = styled.td`
   display: flex;
   justify-content: center;
@@ -53,11 +62,56 @@ function GradesTemplate() {
   const [autoFocus, setAutoFocus] = useState<
     "grade" | "name" | "weight" | undefined
   >();
+  const [shouldFocusOnCourseName, setShouldFocusOnCourseName] = useState(false);
   return (
     <GradesWrapper>
       <Average>
         <AverageText>
-          Your average in <i>{state.courses[state.currentCourse].name}</i> is:
+          Your average in{" "}
+          {state.courses[state.currentCourse]?.editing ? (
+            <CourseInput
+              onBlur={() => {
+                state.modifyCourse(
+                  { ...state.courses[state.currentCourse], editing: false },
+                  state.currentCourse
+                );
+              }}
+              onChange={(event) => {
+                state.modifyCourse(
+                  {
+                    ...state.courses[state.currentCourse],
+                    name: event.target.value,
+                  },
+                  state.currentCourse
+                );
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  (event.target as HTMLInputElement).blur();
+                }
+              }}
+              onMouseEnter={(event) => {
+                if (shouldFocusOnCourseName) {
+                  (event.target as HTMLInputElement).focus();
+                  setShouldFocusOnCourseName(false);
+                }
+              }}
+              value={state.courses[state.currentCourse]?.name}
+            />
+          ) : (
+            <CourseName
+              onClick={() => {
+                setShouldFocusOnCourseName(true);
+                state.modifyCourse(
+                  { ...state.courses[state.currentCourse], editing: true },
+                  state.currentCourse
+                );
+              }}
+            >
+              <i>{state.courses[state.currentCourse]?.name}</i>
+            </CourseName>
+          )}{" "}
+          is:
         </AverageText>
         <AverageNumber>
           {Boolean(assignments) &&

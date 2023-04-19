@@ -9,8 +9,15 @@ export default class Course {
 
   public assignments: Assignment[];
 
-  public constructor(name?: string, assignments?: Assignment[]) {
+  public editing: boolean;
+
+  public constructor(
+    name?: string,
+    assignments?: Assignment[],
+    editing?: boolean
+  ) {
     this.name = name ?? "";
     this.assignments = assignments ?? [];
+    this.editing = editing ?? false;
   }
 }
