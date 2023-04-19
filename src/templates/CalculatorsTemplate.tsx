@@ -1,5 +1,5 @@
 function CalculatorsTemplate() {
-  return <div>Calculators</div>;
+  return <div>Misc. things like GPA, final exam, SAT, etc.</div>;
 }
 
 export default CalculatorsTemplate;
