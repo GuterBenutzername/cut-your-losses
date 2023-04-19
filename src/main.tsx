@@ -1,16 +1,36 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { enablePatches } from "immer";
-
-import App from "./pages/App";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "./index.css";
+import Dashboard from "./pages/Dashboard";
+import Grades from "./pages/Grades";
+import Calculators from "./pages/Calculators";
+import RootTemplate from "./templates/RootTemplate";
 
-enablePatches();
+const router = createBrowserRouter([
+  {
+    path: "/",
+
+    element: <RootTemplate />,
+
+    children: [
+      { path: "/dashboard", element: <Dashboard /> },
+      {
+        path: "/grades",
+        element: <Grades />,
+      },
+      {
+        path: "/calculators",
+        element: <Calculators />,
+      },
+    ],
+  },
+]);
 if (typeof document !== "undefined") {
   createRoot(document.querySelector("#root")!).render(
     <StrictMode>
-      <App />
+      <RouterProvider router={router} />
     </StrictMode>
   );
 }

@@ -1,57 +1,55 @@
 {
   "name": "cut-your-losses",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.1.0",
   "type": "module",
+  "browserslist": "> 0.052%, not dead",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "format": "prettier --write ."
   },
-  "postcss": {
-    "plugins": {
-      "postcss-preset-env": {}
-    }
-  },
   "dependencies": {
-    "@emotion/css": "^11.10.6",
-    "immer": "^9.0.21",
-    "papaparse": "^5.4.1",
+    "localforage": "^1.10.0",
+    "match-sorter": "^6.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "uuid": "^9.0.0"
+    "react-number-format": "^5.1.4",
+    "react-router-dom": "^6.10.0",
+    "sort-by": "^1.2.0",
+    "styled-components": "^5.3.9",
+    "uuid": "^9.0.0",
+    "zustand": "^4.3.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.3",
-    "@commitlint/cli": "^17.5.0",
-    "@commitlint/config-conventional": "^17.4.4",
-    "@playwright/test": "^1.32.0",
-    "@types/papaparse": "^5.3.7",
+    "@babel/core": ">=7.11.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@types/styled-components": "^5.1.26",
     "@types/uuid": "^9.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.56.0",
-    "@typescript-eslint/parser": "^5.56.0",
-    "@vitejs/plugin-react": "^3.1.0",
-    "@vitejs/plugin-react-swc": "^3.2.0",
-    "eslint": "^8.36.0",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "eslint": "^8.37.0",
     "eslint-config-hardcore": "^35.0.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-config-xo": "^0.43.1",
-    "eslint-config-xo-react": "^0.27.0",
-    "eslint-config-xo-typescript": "^0.56.0",
-    "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "husky": "^8.0.3",
-    "jsdom": "^21.1.1",
-    "postcss": "^8.4.21",
-    "postcss-preset-env": "^8.0.1",
-    "prettier": "^2.8.6",
-    "prop-types": "^15.8.1",
-    "stylelint": "^15.3.0",
+    "lint-staged": "^13.2.0",
+    "postcss": "<9.0.0",
+    "postcss-styled-syntax": "^0.4.0",
+    "prettier": "^2.8.7",
+    "react-is": "^18.2.0",
+    "stylelint": ">=15.3.0 <16.0.0",
     "stylelint-config-standard": "^31.0.0",
-    "typescript": "^5.0.2",
-    "vite": "^4.2.1"
+    "typescript": "^4.9.3",
+    "vite": "^4.2.0",
+    "vitest": "^0.29.8",
+    "vue-eslint-parser": ">=7.1.0"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{css,scss,md,html,json}": [
+      "prettier --write"
+    ]
   }
 }
