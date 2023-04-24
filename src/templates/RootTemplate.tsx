@@ -35,10 +35,12 @@ const SidebarWrapper = styled.nav`
 `;
 
 const SidebarLink = styled(NavLink)`
+  margin-top: ${(properties: { revMargin: boolean; isactive: boolean }) =>
+    properties.revMargin ? "-16px" : "unset"};
   display: flex;
   gap: 8px;
   padding-left: 10px;
-  background-color: ${(properties: { isactive: boolean }) =>
+  background-color: ${(properties: { revMargin: boolean; isactive: boolean }) =>
     properties.isactive ? "#545f75" : "#434c5e"};
   color: white;
   border: 0;
@@ -66,9 +68,13 @@ const Courses = styled.ul`
   position: relative;
   top: -16px;
   list-style-type: none;
+  overflow: hidden;
   color: #fff;
   margin: 0;
   background-color: #4a5466;
+  transition: max-height 0.9s;
+  max-height: ${(properties: { show: boolean }) =>
+    properties.show ? "100vh" : "0px"};
 `;
 
 const CourseStyle = css`
@@ -140,7 +146,11 @@ function RootTemplate() {
             width={100}
           />
         </Header>
-        <SidebarLink isactive={pathname === "/dashboard"} to="/dashboard">
+        <SidebarLink
+          isactive={pathname === "/dashboard"}
+          revMargin={false}
+          to="/dashboard"
+        >
           <svg
             fill="none"
             height="21"
@@ -157,7 +167,11 @@ function RootTemplate() {
           </svg>
           <span>Dashboard</span>
         </SidebarLink>
-        <SidebarLink isactive={pathname === "/grades"} to="/grades">
+        <SidebarLink
+          isactive={pathname === "/grades"}
+          revMargin={false}
+          to="/grades"
+        >
           <svg
             fill="none"
             height="23"
@@ -172,81 +186,83 @@ function RootTemplate() {
           </svg>
           <span>Grades</span>
         </SidebarLink>
-        {pathname === "/grades" && (
-          <Courses>
-            {state.courses.map((course, index) => (
-              <li key={course.id}>
-                {course.editing ? (
-                  <CourseInput
-                    isactive={index === state.currentCourse}
-                    onBlur={() => {
-                      state.modifyCourse({ ...course, editing: false }, index);
-                    }}
-                    onChange={(event) => {
-                      state.modifyCourse(
-                        { ...course, name: event.target.value.slice(2) },
-                        index
-                      );
-                    }}
-                    onClick={() => {
-                      state.setCurrentCourse(index);
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        (event.target as HTMLInputElement).blur();
-                      }
-                    }}
-                    onMouseEnter={(event) => {
-                      if (shouldFocus) {
-                        (event.target as HTMLInputElement).focus();
-                        setShouldFocus(false);
-                      }
-                    }}
-                    value={`> ${course.name}`}
-                  />
-                ) : (
-                  <CourseButton
-                    isactive={index === state.currentCourse}
-                    onClick={() => {
-                      if (index === state.currentCourse) {
-                        setShouldFocus(true);
-                        state.modifyCourse({ ...course, editing: true }, index);
-                      }
-                      state.setCurrentCourse(index);
-                    }}
-                    type="button"
-                  >
-                    <CourseRow>
-                      <span>{`> ${course.name}`}</span>
-                      <DeleteButton
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          state.deleteCourse(index);
-                        }}
-                      >
-                        X
-                      </DeleteButton>
-                    </CourseRow>
-                  </CourseButton>
-                )}
-              </li>
-            ))}
-            <li>
-              <CourseButton
-                isactive={false}
-                onClick={() => {
-                  setShouldFocus(true);
-                  state.pushCourse(new Course("", [], true));
-                  state.setCurrentCourse(state.courses.length - 1);
-                }}
-                type="button"
-              >
-                +
-              </CourseButton>
+        <Courses show={pathname === "/grades"}>
+          {state.courses.map((course, index) => (
+            <li key={course.id}>
+              {course.editing ? (
+                <CourseInput
+                  isactive={index === state.currentCourse}
+                  onBlur={() => {
+                    state.modifyCourse({ ...course, editing: false }, index);
+                  }}
+                  onChange={(event) => {
+                    state.modifyCourse(
+                      { ...course, name: event.target.value.slice(2) },
+                      index
+                    );
+                  }}
+                  onClick={() => {
+                    state.setCurrentCourse(index);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      (event.target as HTMLInputElement).blur();
+                    }
+                  }}
+                  onMouseEnter={(event) => {
+                    if (shouldFocus) {
+                      (event.target as HTMLInputElement).focus();
+                      setShouldFocus(false);
+                    }
+                  }}
+                  value={`> ${course.name}`}
+                />
+              ) : (
+                <CourseButton
+                  isactive={index === state.currentCourse}
+                  onClick={() => {
+                    if (index === state.currentCourse) {
+                      setShouldFocus(true);
+                      state.modifyCourse({ ...course, editing: true }, index);
+                    }
+                    state.setCurrentCourse(index);
+                  }}
+                  type="button"
+                >
+                  <CourseRow>
+                    <span>{`> ${course.name}`}</span>
+                    <DeleteButton
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        state.deleteCourse(index);
+                      }}
+                    >
+                      X
+                    </DeleteButton>
+                  </CourseRow>
+                </CourseButton>
+              )}
             </li>
-          </Courses>
-        )}
-        <SidebarLink isactive={pathname === "/calculators"} to="/calculators">
+          ))}
+          <li>
+            <CourseButton
+              isactive={false}
+              onClick={() => {
+                setShouldFocus(true);
+                state.pushCourse(new Course("", [], true));
+                state.setCurrentCourse(state.courses.length - 1);
+              }}
+              type="button"
+            >
+              +
+            </CourseButton>
+          </li>
+        </Courses>
+        <SidebarLink
+          isactive={pathname === "/calculators"}
+          revMargin
+          to="/calculators"
+        >
           <svg
             fill="none"
             height="23"
